@@ -1,7 +1,7 @@
 {
   "name": "apartment-score",
   "version": "1.0.0",
-  "description": "App Boilerplate",
+  "description": "An App to help choose an apartment based on a custom score",
   "main": "index.js",
   "scripts": {
     "start": "node server/index.js",

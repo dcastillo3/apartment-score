@@ -1,4 +1,4 @@
-import { Portfolio } from '../components/main/portfolio';
+import { Apartment } from '../components/main/apartment';
 import { PitchDeck } from '../components/main/pitchDeck';
 import { Donate } from '../components/main/donate';
 import { Biography } from '../components/main/biography';
@@ -13,10 +13,10 @@ import PersonIcon from '@mui/icons-material/Person';
 const menuRoutes = [
     {
         id: 1,
-        name: 'Works',
+        name: 'Apartment',
         path: '/',
         icon: SlideshowIcon,
-        Element: Portfolio
+        Element: Apartment
     },
     {
         id: 2,

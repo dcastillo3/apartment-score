@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import _ from 'lodash/core';
-import { Box, Card, DragAndDrop, FlexBox, FlexBoxColumn, Input, Label, Text, TextSmall, cardProps } from '../../styled';
+import { Box, Card, DragAndDrop, FlexBox, FlexBoxColumn, Input, Label, Option, Select, Text, TextSmall, cardProps } from '../../styled';
 import { uploadMessage } from './formConsts';
 import { FormTextArea, HiddenFormFieldContainer, UploadMessageText } from './formStyledComponents';
 
@@ -61,7 +61,8 @@ const buildInput = (formField, formData, handleChangeField) => {
         labelName, 
         inputType,
         additionalProps,
-        validations
+        validations,
+        options
     } = formField;
     const inputValue = formData[id];
 
@@ -80,6 +81,21 @@ const buildInput = (formField, formData, handleChangeField) => {
                 <FlexBoxColumn $m={[3]} key={id} $wrap={true}>
                     <Label>{labelName}</Label>
                     <FormTextArea onChange={handleChangeField} value={inputValue} type={inputType} id={id} name={id} {...additionalProps} />
+                </FlexBoxColumn>
+            );
+        };
+
+        case 'select': {
+            return (
+                <FlexBoxColumn $m={[3]} key={id} $wrap={true}>
+                    <Label>{labelName}</Label>
+                    <Select onChange={handleChangeField} value={inputValue} id={id} name={id} {...additionalProps}>
+                        {options.map(option => (
+                            <Option key={option.value} value={option.value}>
+                                {option.label}
+                            </Option>
+                        ))}
+                    </Select>
                 </FlexBoxColumn>
             );
         };

@@ -1,7 +1,10 @@
 import styled from "styled-components";
-import { Card } from "../styled";
+import { Card, Box } from "../styled";
 
-const HeaderContainer = styled(Card)`
+const HeaderContainer = styled(Box)`
+`;
+
+const HeaderLogoMenuContainer = styled(Card)`
     position: sticky;
     top: 0;
     left: 0;
@@ -10,5 +13,6 @@ const HeaderContainer = styled(Card)`
 `;
 
 export {
-    HeaderContainer
+    HeaderContainer,
+    HeaderLogoMenuContainer
 };

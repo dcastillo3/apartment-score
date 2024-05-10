@@ -1,33 +1,27 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
-import { getRouteByPathname } from '../../routes/routesUtils';
-import { FlexBox, FlexBoxColumn, SubTitle, Text, Title, TitleSmall, cardProps } from '../styled';
+import { FlexBox, FlexBoxColumn, SubTitle, Title, TitleSmall, cardProps } from '../styled';
 import { Menu } from '../menu';
-import { HeaderContainer } from './headerStyledComponents';
+import { HeaderContainer, HeaderLogoMenuContainer } from './headerStyledComponents';
 import { useMediaQuery } from '../../hooks';
 
 function Header() {
-    const { pathname } = useLocation();
-    const { name: pageTitle } = getRouteByPathname(pathname);
     const { isDesktop } = useMediaQuery();
-    const headerContainerPadding = isDesktop ? [5, 8] : [2];
+    const headerLogoMenuContainerPadding = isDesktop ? [5, 8] : [2];
 
     return (
-        <HeaderContainer $variant={cardProps.variant.background} $p={headerContainerPadding}>
-            <FlexBoxColumn>
-                <FlexBox $itemsPerRow={2}>
-                    <SubTitle>App Name/Logo</SubTitle>
+        <HeaderContainer>
+                <HeaderLogoMenuContainer $variant={cardProps.variant.background} $p={headerLogoMenuContainerPadding}>
+                    <FlexBox $itemsPerRow={2}>
+                        <SubTitle>ApartmentScore</SubTitle>
+        
+                        <Menu />
+                    </FlexBox>
+                </HeaderLogoMenuContainer>
     
-                    <Menu />
-                </FlexBox>
-    
-                <FlexBoxColumn $center>
-                    <Title>Header Title</Title>
-                    <TitleSmall>Header Subtext</TitleSmall>
+                <FlexBoxColumn $p={[8, 0]} $center>
+                    <Title>Apartment Score</Title>
+                    <TitleSmall>Simple Selection</TitleSmall>
                 </FlexBoxColumn>
-
-                <Text>{pageTitle}</Text>
-            </FlexBoxColumn>
         </HeaderContainer>
     );
 };

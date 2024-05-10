@@ -1,4 +1,4 @@
-export { Form, Label, Input, Textarea, Select, DragAndDrop } from './components/form';
+export { Form, Label, Input, Textarea, Select, Option, DragAndDrop } from './components/form';
 export { Button, SemanticButton } from './components/button';
 export { FlexBox, FlexBoxColumn } from './components/flexBox';
 export { Grid } from './components/grid';

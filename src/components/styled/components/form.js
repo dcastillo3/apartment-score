@@ -31,6 +31,9 @@ export const Select = styled.select`
     ${(props) => buildTypography(props, typographyProps.body2)}
 `;
 
+export const Option = styled.option`
+`;
+
 export const DragAndDrop = styled(Card)`
     border-radius: ${({theme}) => theme.spacing(1)};
     border: dashed 1px ${({theme}) => theme.palette.info.main};
