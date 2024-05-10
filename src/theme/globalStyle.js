@@ -4,7 +4,6 @@ import { minMobileWidth } from '../hooks/useMediaQuery/useMediaQueryConsts';
 
 const GlobalStyle = createGlobalStyle`
     body {
-        padding: ${theme.spacing(0, 0, 26, 0)};
         background: ${theme.palette.background.main};
         color: ${theme.palette.text.background};
         font-family: ${theme.typography.fontFamily};

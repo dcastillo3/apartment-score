@@ -1,13 +1,13 @@
 import React from 'react';
 import { ClickAwayListener } from '@mui/material';
-import { Button, SemanticButton, buttonProps } from '../../styled';
+import { Button, buttonProps } from '../../styled';
 import { ModalBackDrop, ModalComponentContainer, ModalComponentScrollContainer, ModalContainer, ModalExitIcon, ModalExitIconContainer } from './modalStyledComponents';
 import { useMediaQuery } from '../../../hooks';
 import { useEffect } from 'react';
 import { toggleBodyScrollBar } from './modalUtils';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 
-function Modal({children, modalComponent, variant, showModal, handleToggleModal}) {
+function Modal({children, modalComponent, variant, buttonVariant, showModal, handleToggleModal}) {
     const { isMobile } = useMediaQuery();
 
     const renderModal = showModal && (
@@ -34,9 +34,9 @@ function Modal({children, modalComponent, variant, showModal, handleToggleModal}
 
     return (
         <ModalContainer>
-            <SemanticButton onClick={handleToggleModal}>
+            <Button $variant={buttonVariant} onClick={handleToggleModal}>
                 {children}
-            </SemanticButton>
+            </Button>
             
             {renderModal}
         </ModalContainer>
