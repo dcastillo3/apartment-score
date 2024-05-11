@@ -1,5 +1,5 @@
 import React from 'react';
-import { cardProps } from '../styled';
+import { FlexBox, Text, cardProps } from '../styled';
 import { FooterContainer } from './footerStyledComponents';
 import { useMediaQuery } from '../../hooks';
 
@@ -9,7 +9,9 @@ function Footer() {
 
     return (
         <FooterContainer $variant={cardProps.variant.background} $p={headerContainerPadding}>
-            Footer
+            <FlexBox $center>
+                <Text>©2024 by Down & Jown</Text>
+            </FlexBox>
         </FooterContainer>
     );
 };
