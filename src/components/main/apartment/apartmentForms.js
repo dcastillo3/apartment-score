@@ -6,22 +6,50 @@ const addApartmentForm = {
     fieldsPerRow: 2,
     inputs: [
         {
-            id: 'name',
-            labelName: 'Name',
+            id: 'address',
+            labelName: 'Address',
             inputType: 'text',
             defaultValue: '',
             options: [],
-            additionalProps: {},
+            additionalProps: {
+                required: true
+            },
             validations: {},
             fullRow: false
         },
         {
             id: 'price',
             labelName: 'Price',
+            inputType: 'number',
+            defaultValue: '',
+            options: [],
+            additionalProps: {
+                required: true
+            },
+            validations: {},
+            fullRow: false
+        },
+        {
+            id: 'link',
+            labelName: 'Link',
             inputType: 'text',
             defaultValue: '',
             options: [],
-            additionalProps: {},
+            additionalProps: {
+                required: true
+            },
+            validations: {},
+            fullRow: false
+        },
+        {
+            id: 'imageLink',
+            labelName: 'Image Link',
+            inputType: 'text',
+            defaultValue: '',
+            options: [],
+            additionalProps: {
+                required: true
+            },
             validations: {},
             fullRow: false
         },
@@ -29,7 +57,7 @@ const addApartmentForm = {
             id: 'bedrooms',
             labelName: 'Bedrooms',
             inputType: 'select',
-            defaultValue: '',
+            defaultValue: 1,
             options: apartmentBedroomOptions,
             additionalProps: {},
             validations: {},
@@ -39,7 +67,7 @@ const addApartmentForm = {
             id: 'bathrooms',
             labelName: 'Bathrooms',
             inputType: 'select',
-            defaultValue: '',
+            defaultValue: 1,
             options: apartmentBathroomOptions,
             additionalProps: {},
             validations: {},
@@ -49,7 +77,7 @@ const addApartmentForm = {
             id: 'walkScore',
             labelName: 'Walk Score',
             inputType: 'select',
-            defaultValue: '',
+            defaultValue: 1,
             options: apartmentScoreOptions,
             additionalProps: {},
             validations: {},
@@ -59,7 +87,7 @@ const addApartmentForm = {
             id: 'locationScore',
             labelName: 'Location Score',
             inputType: 'select',
-            defaultValue: '',
+            defaultValue: 1,
             options: apartmentScoreOptions,
             additionalProps: {},
             validations: {},
@@ -69,7 +97,7 @@ const addApartmentForm = {
             id: 'amenityScore',
             labelName: 'Amenity Score',
             inputType: 'select',
-            defaultValue: '',
+            defaultValue: 1,
             options: apartmentScoreOptions,
             additionalProps: {},
             validations: {},
@@ -79,7 +107,7 @@ const addApartmentForm = {
             id: 'interiorScore',
             labelName: 'Interior Score',
             inputType: 'select',
-            defaultValue: '',
+            defaultValue: 1,
             options: apartmentScoreOptions,
             additionalProps: {},
             validations: {},

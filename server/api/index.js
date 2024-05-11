@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-//Tracks route
+//Data route
 router.use('/data', require('./data/data'));
 
 router.use((req, res, next) => {

@@ -9,7 +9,7 @@ function ApartmentList({apartments, handleDeleteApartment, handleUpdateApartment
     const { isDesktop } = useMediaQuery();
     const headingMargin = isDesktop ? [0, 8] : [0, 5];
     const apartmentListMargin = isDesktop ? [0, 8] : null;
-    const apartmentListItemSize = isDesktop ? 87 : 36;
+    const apartmentListItemSize = isDesktop ? 87 : 87;
 
     const renderApartments = apartments.map((apartment, i) => {
         return (

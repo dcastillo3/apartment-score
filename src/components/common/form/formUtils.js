@@ -76,6 +76,15 @@ const buildInput = (formField, formData, handleChangeField) => {
             );
         };
 
+        case 'number': {
+            return (
+                <FlexBoxColumn $m={[3]} key={id} $wrap={true}>
+                    <Label>{labelName}</Label>
+                    <Input onChange={handleChangeField} value={inputValue} type={inputType} id={id} name={id} {...additionalProps} />
+                </FlexBoxColumn>
+            );
+        };
+
         case 'textarea': {
             return (
                 <FlexBoxColumn $m={[3]} key={id} $wrap={true}>

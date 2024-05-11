@@ -44,7 +44,7 @@ function Form({formParams: {title, buttonName, fieldsPerRow, inputs}, handleSubm
                 <FlexBoxColumn>
                     {renderTitle}
 
-                    <FlexBox>
+                    <FlexBox $center>
                         <StyledForm onSubmit={handleSubmitForm}>
                             {renderFormFields}
 

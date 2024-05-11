@@ -4,11 +4,11 @@ import { Card, FlexBox } from "../../styled";
 const ApartmentContainer = styled(Card)`
 `;
 
-const ApartmentModalContainer = styled(FlexBox)`
-    justify-content: flex-end;
+const ApartmentButtonHeaderContainer = styled(FlexBox)`
+    justify-content: space-between;
 `;
 
 export {
     ApartmentContainer,
-    ApartmentModalContainer
+    ApartmentButtonHeaderContainer
 };

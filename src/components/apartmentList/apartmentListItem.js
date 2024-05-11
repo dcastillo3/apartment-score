@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Box, Button, Card, FlexBox, FlexBoxColumn, Label, TextSmall, TitleSmall, cardProps } from '../styled';
+import { Anchor, Box, Button, Card, FlexBox, FlexBoxColumn, Label, TextSmall, TitleSmall, cardProps } from '../styled';
 import { updateApartmentForm } from '../main/apartment/apartmentForms';
 import { Form } from '../common';
 import { buttonNames } from '../main/apartment/apartmentConsts';
 import { fillApartmentForm } from './apartmentListUtils';
-import { ApartmentListTotalScoreContainer } from './apartmentListStyledComponents';
+import { ApartmentListItemImage, ApartmentListItemImageContainer, ApartmentListTotalScoreContainer } from './apartmentListStyledComponents';
 
 function ApartmentListItem({apartment, handleDelete, handleUpdate}) {
     const [showUpdateForm, setShowUpdateForm] = useState(false);
@@ -33,11 +33,17 @@ function ApartmentListItem({apartment, handleDelete, handleUpdate}) {
 
     const renderApartmentListItem = !showUpdateForm && (
         <Box>
+            <Anchor href={apartment.link} target="_blank">
+                <ApartmentListItemImageContainer>
+                    <ApartmentListItemImage src={apartment.imageLink} alt={apartment.name} />
+                </ApartmentListItemImageContainer>
+            </Anchor>
+            
             <FlexBoxColumn>
                 <FlexBox $itemsPerRow={2}>
                     <FlexBoxColumn $p={apartmentListItemFieldPadding}>
-                        <Label>Name: </Label>
-                        <TextSmall>{apartment.name}</TextSmall>
+                        <Label>Address: </Label>
+                        <TextSmall>{apartment.address}</TextSmall>
                     </FlexBoxColumn>
 
                     <FlexBoxColumn $p={apartmentListItemFieldPadding}>
@@ -99,10 +105,8 @@ function ApartmentListItem({apartment, handleDelete, handleUpdate}) {
 
     return (
         <Card $variant={cardProps.variant.backgroundLight} $m={[2, 2]} $p={[2, 2]}>
-            <FlexBoxColumn>
-                {renderUpdateForm}
-                {renderApartmentListItem}
-            </FlexBoxColumn>
+            {renderUpdateForm}
+            {renderApartmentListItem}
         </Card>
     );
 };

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Box, cardProps } from '../../styled';
+import React, { useEffect, useState } from 'react';
+import { Box, FlexBox, Option, Select, cardProps } from '../../styled';
 import { useMediaQuery } from '../../../hooks';
-import { ApartmentContainer, ApartmentModalContainer } from './apartmentStyledComponents';
-import { localStorageKeys } from '../../../utils/consts';
+import { ApartmentButtonHeaderContainer, ApartmentContainer, ApartmentModalContainer } from './apartmentStyledComponents';
+import { initialStates, localStorageKeys } from '../../../utils/consts';
 import { generateUniqueId } from '../../../utils/reactUtils';
 import { ApartmentList } from '../../apartmentList';
 import { addApartmentForm } from './apartmentForms';
@@ -13,6 +13,8 @@ import { getStateFromLocalStorage, setLocalStorageState } from '../../../utils/h
 
 function Apartment() {
     const [apartments, setApartments] = useState(() => getStateFromLocalStorage(localStorageKeys.apartments));
+    const [sortProperty, setSortProperty] = useState(initialStates.sortProperty);
+    const [order, setOrder] = useState(initialStates.order);
     const [showModal, setShowModal] = useState(false);
     
     const { isDesktop } = useMediaQuery();
@@ -64,7 +66,31 @@ function Apartment() {
     const handleDeleteApartment = id => {
         const newApartments = apartments.filter(apartment => apartment.id !== id);
 
+        // Persist apartments in local storage
+        setLocalStorageState(localStorageKeys.apartments, newApartments);
+
         setApartments(newApartments);
+    };
+
+    const handleChangeOrder = e => {
+        const { value } = e.target;
+
+        setOrder(value);
+    };
+
+    const handleChangeSortProperty = e => {
+        const { value } = e.target;
+
+        setSortProperty(value);
+    };
+
+    // Sort apartments by any property in descending order. Disclude address, link, and imageLink.
+    const handleSortApartments = () => {
+        const newApartments = [...apartments];
+        const sortedApartments = newApartments.sort((a, b) => 
+            order === 'asc' ? a[sortProperty] - b[sortProperty] : b[sortProperty] - a[sortProperty]);
+
+        setApartments(sortedApartments);
     };
 
     const renderApartmentList = apartments.length > 0 && (
@@ -74,11 +100,34 @@ function Apartment() {
             handleUpdateApartment={handleUpdateApartment}
         />
     );
+    
+    // update sort
+    useEffect(() => {
+        handleSortApartments(sortProperty);
+    }, [sortProperty, order]);
 
     return (
         <ApartmentContainer $variant={cardProps.variant.background} $p={portfolioContainerPadding}>
             <Box>
-                <ApartmentModalContainer>
+                <ApartmentButtonHeaderContainer>
+                    <FlexBox>
+                        <Select onChange={handleChangeSortProperty} value={sortProperty}>
+                            <Option value="price">Price</Option>
+                            <Option value="bedrooms">Bedrooms</Option>
+                            <Option value="bathrooms">Bathrooms</Option>
+                            <Option value="walkScore">Walk Score</Option>
+                            <Option value="locationScore">Location Score</Option>
+                            <Option value="amenityScore">Amenity Score</Option>
+                            <Option value="interiorScore">Interior Score</Option>
+                            <Option value="totalScore">Total Score</Option>
+                        </Select>
+
+                        <Select onChange={handleChangeOrder} value={order}>
+                            <Option value="asc">Ascending</Option>
+                            <Option value="desc">Descending</Option>
+                        </Select>
+                    </FlexBox>
+
                     <Modal
                         showModal={showModal}
                         variant={modalProps.variant.background}
@@ -93,7 +142,7 @@ function Apartment() {
                     >
                         {buttonNames.add}
                     </Modal>
-                </ApartmentModalContainer>
+                </ApartmentButtonHeaderContainer>
             </Box>
 
             {renderApartmentList}
