@@ -10,6 +10,8 @@ const localStorageKeys = {
 
 const initialStates = {
     data: [],
+    sortProperty: 'totalScore',
+    order: 'desc',
     apartments: [],
 }
 

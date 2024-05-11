@@ -1,27 +1,39 @@
 import React from 'react';
-import { FlexBox, FlexBoxColumn, SubTitle, Title, TitleSmall, cardProps } from '../styled';
-import { Menu } from '../menu';
-import { HeaderContainer, HeaderLogoMenuContainer } from './headerStyledComponents';
+import { FlexBoxColumn, SubTitle, Title, TitleMedium, TitleSmall, cardProps } from '../styled';
+import { Menu, MobileMenu } from '../menu';
+import { HeaderContainer, HeaderFlexBoxContainer, HeaderLogoMenuContainer, HeaderTitleContainer } from './headerStyledComponents';
 import { useMediaQuery } from '../../hooks';
 
 function Header() {
     const { isDesktop } = useMediaQuery();
     const headerLogoMenuContainerPadding = isDesktop ? [5, 8] : [2];
+    const HeaderTitleComponent = isDesktop ? Title : TitleMedium;
+    const HeaderSubTitleComponent = isDesktop ? TitleSmall : SubTitle;
+
+    const renderDesktopMenu = isDesktop && (
+        <Menu />
+    );
+
+    const renderMobileMenu = !isDesktop && (
+        <MobileMenu />
+    );
 
     return (
         <HeaderContainer>
                 <HeaderLogoMenuContainer $variant={cardProps.variant.background} $p={headerLogoMenuContainerPadding}>
-                    <FlexBox $itemsPerRow={2}>
+                    <HeaderFlexBoxContainer $isDesktop={isDesktop}>
+                        {renderMobileMenu}
+
                         <SubTitle>ApartmentScore</SubTitle>
-        
-                        <Menu />
-                    </FlexBox>
+
+                        {renderDesktopMenu}
+                    </HeaderFlexBoxContainer>
                 </HeaderLogoMenuContainer>
     
-                <FlexBoxColumn $p={[8, 0]} $center>
-                    <Title>Apartment Score</Title>
-                    <TitleSmall>Simple Selection</TitleSmall>
-                </FlexBoxColumn>
+                <HeaderTitleContainer $p={[8, 0]} $center>
+                    <HeaderTitleComponent>Apartment Score</HeaderTitleComponent>
+                    <HeaderSubTitleComponent>Simple Selection</HeaderSubTitleComponent>
+                </HeaderTitleContainer>
         </HeaderContainer>
     );
 };

@@ -1,5 +1,5 @@
 const buttonNames = {
-    add: 'Add Apartment',
+    add: 'Add',
     update: 'Edit',
     delete: 'Delete',
     cancel: 'Cancel'
