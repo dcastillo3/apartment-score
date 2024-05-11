@@ -6,8 +6,8 @@ import { initialStates, localStorageKeys } from '../../../utils/consts';
 import { generateUniqueId } from '../../../utils/reactUtils';
 import { ApartmentList } from '../../apartmentList';
 import { addApartmentForm } from './apartmentForms';
-import { Form, Modal, modalProps } from '../../common';
-import { buttonNames } from './apartmentConsts';
+import { Form, Heading, Modal, headingProps, modalProps } from '../../common';
+import { apartmentListHeading, buttonNames } from './apartmentConsts';
 import { getTotalScore } from '../../apartmentList/apartmentListUtils';
 import { getStateFromLocalStorage, setLocalStorageState } from '../../../utils/helpers';
 
@@ -18,7 +18,9 @@ function Apartment() {
     const [showModal, setShowModal] = useState(false);
     
     const { isDesktop } = useMediaQuery();
-    const portfolioContainerPadding = isDesktop ? [5, 8] : [2];
+    const apartmentContainerPadding = isDesktop ? [5, 8] : [2];
+    const apartmentButtonHeaderContainerPadding = isDesktop ? [5, 0] : [2];
+    const headingMargin = isDesktop ? [0, 8] : [0, 5];
 
     const toggleModal = () => {
         setShowModal(!showModal);
@@ -100,6 +102,37 @@ function Apartment() {
             handleUpdateApartment={handleUpdateApartment}
         />
     );
+
+    const renderApartmentHeader = apartments.length > 0 && (
+        <Box $m={headingMargin}>
+            <Heading
+                variant={headingProps.variant.success}
+                heading={apartmentListHeading}
+            />
+        </Box>
+    );
+
+    const renderApartmentSortMenu = apartments.length > 0 && (
+        <FlexBox>
+                <Select onChange={handleChangeSortProperty} value={sortProperty}>
+                    <Option value="price">Price</Option>
+                    <Option value="bedrooms">Bedrooms</Option>
+                    <Option value="bathrooms">Bathrooms</Option>
+                    <Option value="walkScore">Walk Score</Option>
+                    <Option value="locationScore">Location Score</Option>
+                    <Option value="amenityScore">Amenity Score</Option>
+                    <Option value="interiorScore">Interior Score</Option>
+                    <Option value="totalScore">Total Score</Option>
+                </Select>
+
+                <Box $m={[0, 1]} />
+
+                <Select onChange={handleChangeOrder} value={order}>
+                    <Option value="asc">Ascending</Option>
+                    <Option value="desc">Descending</Option>
+                </Select>
+        </FlexBox>
+    );
     
     // update sort
     useEffect(() => {
@@ -107,26 +140,12 @@ function Apartment() {
     }, [sortProperty, order]);
 
     return (
-        <ApartmentContainer $variant={cardProps.variant.background} $p={portfolioContainerPadding}>
+        <ApartmentContainer $variant={cardProps.variant.background} $p={apartmentContainerPadding}>
             <Box>
-                <ApartmentButtonHeaderContainer>
-                    <FlexBox>
-                        <Select onChange={handleChangeSortProperty} value={sortProperty}>
-                            <Option value="price">Price</Option>
-                            <Option value="bedrooms">Bedrooms</Option>
-                            <Option value="bathrooms">Bathrooms</Option>
-                            <Option value="walkScore">Walk Score</Option>
-                            <Option value="locationScore">Location Score</Option>
-                            <Option value="amenityScore">Amenity Score</Option>
-                            <Option value="interiorScore">Interior Score</Option>
-                            <Option value="totalScore">Total Score</Option>
-                        </Select>
+                {renderApartmentHeader}
 
-                        <Select onChange={handleChangeOrder} value={order}>
-                            <Option value="asc">Ascending</Option>
-                            <Option value="desc">Descending</Option>
-                        </Select>
-                    </FlexBox>
+                <ApartmentButtonHeaderContainer $hasApartments={apartments.length > 0} $p={apartmentButtonHeaderContainerPadding}>
+                    {renderApartmentSortMenu}
 
                     <Modal
                         showModal={showModal}

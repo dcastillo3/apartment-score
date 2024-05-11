@@ -5,7 +5,7 @@ const ApartmentContainer = styled(Card)`
 `;
 
 const ApartmentButtonHeaderContainer = styled(FlexBox)`
-    justify-content: space-between;
+    justify-content: ${({$hasApartments}) => ($hasApartments ? "space-between" : "flex-end")};
 `;
 
 export {

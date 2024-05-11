@@ -94,9 +94,12 @@ const apartmentBathroomOptions = [
     }
 ];
 
+const apartmentListHeading = 'My Apartments';
+
 export {
     buttonNames,
     apartmentScoreOptions,
     apartmentBedroomOptions,
-    apartmentBathroomOptions
+    apartmentBathroomOptions,
+    apartmentListHeading
 };
