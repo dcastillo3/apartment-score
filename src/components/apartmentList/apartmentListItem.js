@@ -5,11 +5,14 @@ import { Form } from '../common';
 import { buttonNames } from '../main/apartment/apartmentConsts';
 import { fillApartmentForm } from './apartmentListUtils';
 import { ApartmentListItemImage, ApartmentListItemImageContainer, ApartmentListTotalScoreContainer } from './apartmentListStyledComponents';
+import { useMediaQuery } from '../../hooks';
 
 function ApartmentListItem({apartment, handleDelete, handleUpdate}) {
+    const { isDesktop } = useMediaQuery();
     const [showUpdateForm, setShowUpdateForm] = useState(false);
     const filledApartmentForm = fillApartmentForm(apartment, updateApartmentForm);
     const apartmentListItemFieldPadding = [3, 3];
+    const buttonSize = isDesktop ? 'medium' : 'small';
 
     const updateHandler = apartmentData => {
         handleUpdate(apartment.id, apartmentData);
@@ -96,9 +99,9 @@ function ApartmentListItem({apartment, handleDelete, handleUpdate}) {
             </FlexBoxColumn>
 
             <FlexBox $itemsPerRow={2}>
-                <Button $m={[2]} onClick={toggleUpdateForm}>{buttonNames.update}</Button>
+                <Button $size={buttonSize} $m={[2]} onClick={toggleUpdateForm}>{buttonNames.update}</Button>
 
-                <Button $m={[2]} onClick={() => handleDelete(apartment.id)}>{buttonNames.delete}</Button>
+                <Button $size={buttonSize} $m={[2]} onClick={() => handleDelete(apartment.id)}>{buttonNames.delete}</Button>
             </FlexBox>
         </Box>
     );
