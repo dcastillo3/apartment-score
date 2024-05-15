@@ -31,7 +31,6 @@ const ModalComponentScrollContainer = styled(FlexBoxColumn)`
 `;
 
 const ModalExitIconContainer = styled(FlexBox)`
-    justify-content: flex-end;
 `;
 
 const ModalExitIcon = styled(Icon)`

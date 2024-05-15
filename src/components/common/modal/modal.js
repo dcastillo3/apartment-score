@@ -5,9 +5,9 @@ import { ModalBackDrop, ModalComponentContainer, ModalComponentScrollContainer, 
 import { useMediaQuery } from '../../../hooks';
 import { useEffect } from 'react';
 import { toggleBodyScrollBar } from './modalUtils';
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-function Modal({children, modalComponent, variant, buttonVariant, showModal, handleToggleModal}) {
+function Modal({children, variant, showModal, handleToggleModal}) {
     const { isMobile } = useMediaQuery();
 
     const renderModal = showModal && (
@@ -16,12 +16,12 @@ function Modal({children, modalComponent, variant, buttonVariant, showModal, han
                 <ModalComponentContainer $variant={variant} $isMobile={isMobile}>
                     <ModalComponentScrollContainer>
                         <ModalExitIconContainer $isMobile={isMobile} $m={[4, 6]}>
-                            <Button $size={buttonProps.size.small} onClick={handleToggleModal}>
-                                <ModalExitIcon component={CloseOutlinedIcon} />
+                            <Button $variant={buttonProps.variant.secondary} $size={buttonProps.size.small} onClick={handleToggleModal}>
+                                <ModalExitIcon component={ArrowBackIcon} />
                             </Button>
                         </ModalExitIconContainer>
 
-                        {modalComponent()}
+                        {children}
                     </ModalComponentScrollContainer>
                 </ModalComponentContainer>
             </ClickAwayListener>
@@ -34,10 +34,6 @@ function Modal({children, modalComponent, variant, buttonVariant, showModal, han
 
     return (
         <ModalContainer>
-            <Button $variant={buttonVariant} onClick={handleToggleModal}>
-                {children}
-            </Button>
-            
             {renderModal}
         </ModalContainer>
     );

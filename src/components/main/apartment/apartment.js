@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Box, FlexBox, Option, Select, cardProps } from '../../styled';
+import { Box, Button, FlexBox, Option, Select, buttonProps, cardProps } from '../../styled';
 import { useMediaQuery } from '../../../hooks';
-import { ApartmentButtonHeaderContainer, ApartmentContainer, ApartmentModalContainer } from './apartmentStyledComponents';
+import { ApartmentButtonHeaderContainer, ApartmentContainer } from './apartmentStyledComponents';
 import { initialStates, localStorageKeys } from '../../../utils/consts';
 import { generateUniqueId } from '../../../utils/reactUtils';
 import { ApartmentList } from '../../apartmentList';
@@ -21,6 +21,7 @@ function Apartment() {
     const apartmentContainerPadding = isDesktop ? [5, 8] : [2];
     const apartmentButtonHeaderContainerPadding = isDesktop ? [5, 0] : [2];
     const headingMargin = isDesktop ? [0, 8] : [0, 5];
+    const addButtonSize = isDesktop ? buttonProps.size.medium : buttonProps.size.small;
 
     const toggleModal = () => {
         setShowModal(!showModal);
@@ -113,7 +114,8 @@ function Apartment() {
     );
 
     const renderApartmentSortMenu = apartments.length > 0 && (
-        <FlexBox>
+        <FlexBox $center>
+            <Box $m={[0, 1, 0, 0]}>
                 <Select onChange={handleChangeSortProperty} value={sortProperty}>
                     <Option value="price">Price</Option>
                     <Option value="bedrooms">Bedrooms</Option>
@@ -124,13 +126,14 @@ function Apartment() {
                     <Option value="interiorScore">Interior Score</Option>
                     <Option value="totalScore">Total Score</Option>
                 </Select>
+            </Box>
 
-                <Box $m={[0, 1]} />
-
+            <Box $m={[0, 0, 0, 1]}>
                 <Select onChange={handleChangeOrder} value={order}>
                     <Option value="asc">Ascending</Option>
                     <Option value="desc">Descending</Option>
                 </Select>
+            </Box>
         </FlexBox>
     );
     
@@ -149,18 +152,19 @@ function Apartment() {
 
                     <Modal
                         showModal={showModal}
-                        variant={modalProps.variant.background}
-                        modalComponent={() =>
-                            <Form
-                                formParams={addApartmentForm}
-                                handleSubmit={handleAddApartment}
-                            />
-                        }
+                        variant={modalProps.variant.backgroundLight}
                         handleToggleModal={toggleModal}
                         center
                     >
-                        {buttonNames.add}
+                        <Form
+                            formParams={addApartmentForm}
+                            handleSubmit={handleAddApartment}
+                        />
                     </Modal>
+
+                    <Button $size={addButtonSize} onClick={toggleModal}>
+                        {buttonNames.add}
+                    </Button>
                 </ApartmentButtonHeaderContainer>
             </Box>
 

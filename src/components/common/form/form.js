@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { buildFormData, buildFormFields } from './formUtils';
 import _ from 'lodash/core';
-import { FlexBox, Form as StyledForm, Button, Card, FlexBoxColumn, cardProps } from '../../styled';
+import { FlexBox, Form as StyledForm, Button, FlexBoxColumn, Box, buttonProps } from '../../styled';
 import { Heading, headingProps } from '../';
 import { cancel } from './formConsts';
+import { useMediaQuery } from '../../../hooks';
 
 function Form({formParams: {title, buttonName, fieldsPerRow, inputs}, handleSubmit, handleCancel}) {
+    const { isDesktop } = useMediaQuery();
     const [formFields, setFormFields] = useState(inputs);
     const [formData, setFormData] = useState(() => buildFormData(inputs));
+    const buttonSize = isDesktop ? buttonProps.size.medium : buttonProps.size.small;
 
     const handleChangeField = e => {
         const { name, value } = e.target;
@@ -35,11 +38,11 @@ function Form({formParams: {title, buttonName, fieldsPerRow, inputs}, handleSubm
     );
 
     const renderCancel = handleCancel && (
-        <Button $m={[5, 3]} onClick={handleCancel}>{cancel}</Button>
+        <Button $size={buttonSize} $m={[5, 3]} onClick={handleCancel}>{cancel}</Button>
     );
 
     return (
-        <Card $variant={cardProps.variant.backgroundLight}>
+        <Box>
             <FlexBox $center>
                 <FlexBoxColumn>
                     {renderTitle}
@@ -49,7 +52,7 @@ function Form({formParams: {title, buttonName, fieldsPerRow, inputs}, handleSubm
                             {renderFormFields}
 
                             <FlexBox $itemsPerRow={handleCancel ? 1 : 2}>
-                                <Button $m={[5, 3]} type="submit">{buttonName}</Button>
+                                <Button $size={buttonSize} $m={[5, 3]} type="submit">{buttonName}</Button>
                                 
                                 {renderCancel}
                             </FlexBox>
@@ -57,7 +60,7 @@ function Form({formParams: {title, buttonName, fieldsPerRow, inputs}, handleSubm
                     </FlexBox>
                 </FlexBoxColumn>
             </FlexBox>
-        </Card>
+        </Box>
     );
 };
 
