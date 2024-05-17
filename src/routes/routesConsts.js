@@ -1,8 +1,10 @@
 import { Apartment } from '../components/main/apartment';
 import { Biography } from '../components/main/biography';
 import { NotFound } from '../components/main/notFound';
-import SlideshowIcon from '@mui/icons-material/Slideshow';
-import PersonIcon from '@mui/icons-material/Person';
+import { Settings } from '../components/main/settings';
+import ApartmentIcon from '@mui/icons-material/Apartment';
+import SettingsIcon from '@mui/icons-material/Settings';
+import InfoIcon from '@mui/icons-material/Info';
 
 
 //Maintain ID's
@@ -11,14 +13,21 @@ const menuRoutes = [
         id: 1,
         name: 'Apartment',
         path: '/',
-        icon: SlideshowIcon,
+        icon: ApartmentIcon,
         Element: Apartment
+    },
+    {
+        id: 3,
+        name: 'Settings',
+        path: '/settings',
+        icon: SettingsIcon,
+        Element: Settings
     },
     {
         id: 2,
         name: 'About',
         path: '/biography',
-        icon: PersonIcon,
+        icon: InfoIcon,
         Element: Biography
     },
 ];

@@ -1,21 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Box, Button, FlexBox, Option, Select, buttonProps, cardProps } from '../../styled';
 import { useMediaQuery } from '../../../hooks';
 import { ApartmentButtonHeaderContainer, ApartmentContainer } from './apartmentStyledComponents';
-import { initialStates, localStorageKeys } from '../../../utils/consts';
-import { generateUniqueId } from '../../../utils/reactUtils';
+import { categories, initialStates, orders } from '../../../utils/consts';
 import { ApartmentList } from '../../apartmentList';
 import { addApartmentForm } from './apartmentForms';
 import { Form, Heading, Modal, headingProps, modalProps } from '../../common';
 import { apartmentListHeading, buttonNames } from './apartmentConsts';
-import { getTotalScore } from '../../apartmentList/apartmentListUtils';
-import { getStateFromLocalStorage, setLocalStorageState } from '../../../utils/helpers';
+import { ApartmentContext, SettingsContext } from 'context';
+import { buildCategoryLabel } from 'utils/reactUtils';
 
 function Apartment() {
-    const [apartments, setApartments] = useState(() => getStateFromLocalStorage(localStorageKeys.apartments));
-    const [sortProperty, setSortProperty] = useState(initialStates.sortProperty);
+    const { 
+        apartments, 
+        handleAddApartment, 
+        handleDeleteApartment, 
+        handleUpdateApartment,
+        handleSortApartments 
+    } = useContext(ApartmentContext);
+    const [sortCategory, setSortCategory] = useState(initialStates.sortCategory);
     const [order, setOrder] = useState(initialStates.order);
     const [showModal, setShowModal] = useState(false);
+    const { settings } = useContext(SettingsContext);
     
     const { isDesktop } = useMediaQuery();
     const apartmentContainerPadding = isDesktop ? [5, 8] : [2];
@@ -27,80 +33,42 @@ function Apartment() {
         setShowModal(!showModal);
     };
 
-    const handleAddApartment = apartmentData => {
-        const newTotalScore = getTotalScore(apartmentData);
-        const newApartment = {
-            id: generateUniqueId(),
-            ...apartmentData,
-            totalScore: newTotalScore
-        };
-        const newApartments = [newApartment, ...apartments];
-
-        // Persist apartments in local storage
-        setLocalStorageState(localStorageKeys.apartments, newApartments);
-
-        setApartments(newApartments);
+    const addApartment = apartment => {
+        handleAddApartment(apartment, settings);
 
         toggleModal();
     };
 
-    const handleUpdateApartment = (id, apartmentData) => {
-        const newApartments = apartments.map(apartment => {
-            if (apartment.id === id) {
-                const newTotalScore = getTotalScore(apartmentData);
-                const newApartment = {
-                    ...apartment,
-                    ...apartmentData,
-                    totalScore: newTotalScore
-                };
-
-                return newApartment;
-            };
-
-            return apartment;
-        });
-
-        // Persist apartments in local storage
-        setLocalStorageState(localStorageKeys.apartments, newApartments);
-
-        setApartments(newApartments);
-    };
-
-    const handleDeleteApartment = id => {
-        const newApartments = apartments.filter(apartment => apartment.id !== id);
-
-        // Persist apartments in local storage
-        setLocalStorageState(localStorageKeys.apartments, newApartments);
-
-        setApartments(newApartments);
+    const updateApartment = (id, apartment) => {
+        handleUpdateApartment(id, apartment, settings);
     };
 
     const handleChangeOrder = e => {
-        const { value } = e.target;
+        const { value: newOrder } = e.target;
 
-        setOrder(value);
+        setOrder(newOrder);
+
+        handleSortApartments(sortCategory, newOrder);
     };
 
-    const handleChangeSortProperty = e => {
-        const { value } = e.target;
+    const handleChangeSortCategory = e => {
+        const { value: newSortCategory } = e.target;
 
-        setSortProperty(value);
+        setSortCategory(newSortCategory);
+
+        handleSortApartments(newSortCategory, order);
     };
 
-    // Sort apartments by any property in descending order. Disclude address, link, and imageLink.
-    const handleSortApartments = () => {
-        const newApartments = [...apartments];
-        const sortedApartments = newApartments.sort((a, b) => 
-            order === 'asc' ? a[sortProperty] - b[sortProperty] : b[sortProperty] - a[sortProperty]);
-
-        setApartments(sortedApartments);
-    };
+    //Sort apartments after changes to apartments
+    useEffect(() => {
+        handleSortApartments(sortCategory, order);
+    }, [apartments]);
 
     const renderApartmentList = apartments.length > 0 && (
         <ApartmentList 
             apartments={apartments} 
             handleDeleteApartment={handleDeleteApartment}
-            handleUpdateApartment={handleUpdateApartment}
+            handleUpdateApartment={updateApartment}
         />
     );
 
@@ -113,34 +81,42 @@ function Apartment() {
         </Box>
     );
 
+    const renderApartmentSortMenuNonScoreCategories = categories.sortableNonScoreCategories.map(category => {
+        const categoryLabel = buildCategoryLabel(category);
+
+        return (
+            <Option key={category} value={category}>{categoryLabel}</Option>
+        );
+    });
+
+    const renderApartmentSortMenuScoreCategories = categories.scoreCategories.map(category => {
+        const categoryLabel = buildCategoryLabel(category);
+
+        return (
+            <Option key={category} value={category}>{categoryLabel}</Option>
+        );
+    });
+
+    const renderApartmentSortMenuOrderOptions = Object.values(orders).map(order => (
+        <Option key={order} value={order}>{order}</Option>
+    ));
+
     const renderApartmentSortMenu = apartments.length > 0 && (
         <FlexBox $center>
             <Box $m={[0, 1, 0, 0]}>
-                <Select onChange={handleChangeSortProperty} value={sortProperty}>
-                    <Option value="price">Price</Option>
-                    <Option value="bedrooms">Bedrooms</Option>
-                    <Option value="bathrooms">Bathrooms</Option>
-                    <Option value="walkScore">Walk Score</Option>
-                    <Option value="locationScore">Location Score</Option>
-                    <Option value="amenityScore">Amenity Score</Option>
-                    <Option value="interiorScore">Interior Score</Option>
-                    <Option value="totalScore">Total Score</Option>
+                <Select onChange={handleChangeSortCategory} value={sortCategory}>
+                    {renderApartmentSortMenuNonScoreCategories}
+                    {renderApartmentSortMenuScoreCategories}
                 </Select>
             </Box>
 
             <Box $m={[0, 0, 0, 1]}>
                 <Select onChange={handleChangeOrder} value={order}>
-                    <Option value="asc">Ascending</Option>
-                    <Option value="desc">Descending</Option>
+                    {renderApartmentSortMenuOrderOptions}
                 </Select>
             </Box>
         </FlexBox>
     );
-    
-    // update sort
-    useEffect(() => {
-        handleSortApartments(sortProperty);
-    }, [sortProperty, order]);
 
     return (
         <ApartmentContainer $variant={cardProps.variant.background} $p={apartmentContainerPadding}>
@@ -158,7 +134,7 @@ function Apartment() {
                     >
                         <Form
                             formParams={addApartmentForm}
-                            handleSubmit={handleAddApartment}
+                            handleSubmit={addApartment}
                         />
                     </Modal>
 

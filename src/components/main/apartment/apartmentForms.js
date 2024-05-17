@@ -1,4 +1,8 @@
-import { apartmentBathroomOptions, apartmentBedroomOptions, apartmentScoreOptions } from "./apartmentConsts";
+import { buildApartmentNonScoreSortableCategoryInputs, buildApartmentScoreCategoryInputs } from "./apartmentUtils";
+
+const categorySortableNonScoreInputs = buildApartmentNonScoreSortableCategoryInputs();
+
+const categoryScoreInputs = buildApartmentScoreCategoryInputs();
 
 const addApartmentForm = {
     title: 'Add An Apartment',
@@ -9,18 +13,6 @@ const addApartmentForm = {
             id: 'address',
             labelName: 'Address',
             inputType: 'text',
-            defaultValue: '',
-            options: [],
-            additionalProps: {
-                required: true
-            },
-            validations: {},
-            fullRow: false
-        },
-        {
-            id: 'price',
-            labelName: 'Price',
-            inputType: 'number',
             defaultValue: '',
             options: [],
             additionalProps: {
@@ -53,66 +45,8 @@ const addApartmentForm = {
             validations: {},
             fullRow: false
         },
-        {
-            id: 'bedrooms',
-            labelName: 'Bedrooms',
-            inputType: 'select',
-            defaultValue: 1,
-            options: apartmentBedroomOptions,
-            additionalProps: {},
-            validations: {},
-            fullRow: false
-        },
-        {
-            id: 'bathrooms',
-            labelName: 'Bathrooms',
-            inputType: 'select',
-            defaultValue: 1,
-            options: apartmentBathroomOptions,
-            additionalProps: {},
-            validations: {},
-            fullRow: false
-        },
-        {
-            id: 'walkScore',
-            labelName: 'Walk Score',
-            inputType: 'select',
-            defaultValue: 1,
-            options: apartmentScoreOptions,
-            additionalProps: {},
-            validations: {},
-            fullRow: false
-        },
-        {
-            id: 'locationScore',
-            labelName: 'Location Score',
-            inputType: 'select',
-            defaultValue: 1,
-            options: apartmentScoreOptions,
-            additionalProps: {},
-            validations: {},
-            fullRow: false
-        },
-        {
-            id: 'amenityScore',
-            labelName: 'Amenity Score',
-            inputType: 'select',
-            defaultValue: 1,
-            options: apartmentScoreOptions,
-            additionalProps: {},
-            validations: {},
-            fullRow: false
-        },
-        {
-            id: 'interiorScore',
-            labelName: 'Interior Score',
-            inputType: 'select',
-            defaultValue: 1,
-            options: apartmentScoreOptions,
-            additionalProps: {},
-            validations: {},
-            fullRow: false
-        }
+        ...categorySortableNonScoreInputs,
+        ...categoryScoreInputs
     ]
 };
 
