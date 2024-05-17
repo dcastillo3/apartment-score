@@ -8,3 +8,4 @@ export { default as Heading } from './heading/heading';
 export { headingProps } from './heading/headingConsts';
 export { default as Switcher } from './switcher/switcher';
 export { default as Form } from './form/form';
+export { default as Notification } from './notification/notification';

@@ -2,6 +2,10 @@ import { createContext } from "react";
 
 const DataContext = createContext();
 
+const ApartmentContext = createContext();
+
+const SettingsContext = createContext();
+
 const buildCustomTheme = theme => {
     const customTheme = {
         ...theme
@@ -12,5 +16,7 @@ const buildCustomTheme = theme => {
 
 export {
     DataContext,
+    ApartmentContext,
+    SettingsContext,
     buildCustomTheme
 };
