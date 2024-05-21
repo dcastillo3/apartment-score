@@ -1,6 +1,6 @@
 import { buildCategoryLabel } from "utils/reactUtils";
-import { categories, defaultScoreOption, nonInputCategories, scoreOptions } from "../../../utils/consts";
-import { apartmentRoomOptions } from "./apartmentConsts";
+import { categories, defaultScoreOption, defaultRoomOption, roomRange, excludedInputCategories, scoreRange } from "../../../utils/consts";
+import { buildSelectOptionsFromRange } from "components/common/form/formUtils";
 
 const buildApartmentNonScoreSortableCategoryInputs = () => {
     const nonScoreCategoryInputs = categories.sortableNonScoreCategories.map(category => {
@@ -8,8 +8,8 @@ const buildApartmentNonScoreSortableCategoryInputs = () => {
             id: category,
             labelName: buildCategoryLabel(category),
             inputType: 'select',
-            defaultValue: defaultScoreOption,
-            options: apartmentRoomOptions,
+            defaultValue: defaultRoomOption,
+            options: buildSelectOptionsFromRange(roomRange),
             additionalProps: {},
             validations: {},
             fullRow: false
@@ -33,14 +33,14 @@ const buildApartmentNonScoreSortableCategoryInputs = () => {
 
 const buildApartmentScoreCategoryInputs = () => {
     const filteredScoreCategories = categories.scoreCategories.filter(
-        category => !nonInputCategories.includes(category));
+        category => !excludedInputCategories.includes(category));
     const scoreCategoryInputs = filteredScoreCategories.map(category => {
         const categoryInput = {
             id: category,
             labelName: buildCategoryLabel(category),
             inputType: 'select',
             defaultValue: defaultScoreOption,
-            options: scoreOptions,
+            options: buildSelectOptionsFromRange(scoreRange),
             additionalProps: {},
             validations: {},
             fullRow: false

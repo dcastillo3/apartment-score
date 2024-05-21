@@ -1,10 +1,7 @@
-import React from "react";
-import { categories } from "utils/consts";
-import { buildCategoryLabel, checkScoreCategory } from "utils/reactUtils";
-import { apartmentListItemCategoryPadding, nonListItemCategories } from "./apartmentListConsts";
-import { FlexBox, FlexBoxColumn, Label, TextSmall } from "components/styled";
+import { categories, scoreRange } from "utils/consts";
+import { buildCategoryLabel, getApartmentListItemCategories } from "utils/reactUtils";
 
-const fillApartmentForm = (apartment, updateApartmentForm) => {
+const fillApartmentListItemForm = (apartment, updateApartmentForm) => {
     const filledInputs = updateApartmentForm?.inputs?.map(formField => {
         const inputId = formField.id;
         const inputValue = apartment[inputId];
@@ -25,61 +22,33 @@ const fillApartmentForm = (apartment, updateApartmentForm) => {
     return filledUpdateApartmentForm;
 };
 
-const buildApartmentListItemCategories = apartment => {
-    const apartmentCategories = Object.entries(apartment).filter(([key]) => {
-        return !nonListItemCategories.includes(key);
-    });
-
-    // Render max of two fields per row
-    const categoriesPerRow = 2;
-    const apartmentCategoriesLength = apartmentCategories.length;
-    const renderedCategories = [];
-    let categoryStack = [];
-    let categoriesPerCurrRow = categoriesPerRow;
-    let idx = 0;
-    const addCategoryRow = () => {
-        const categoryRow = (
-            <FlexBox $itemsPerRow={categoriesPerRow} key={idx}>
-                {categoryStack}
-            </FlexBox>
-        );
-
-        categoryStack = [];
-        categoriesPerCurrRow = categoriesPerRow;
-        renderedCategories.push(categoryRow);
+const formatApartmentListItemChartData = apartment => {
+    const listItemCategories = getApartmentListItemCategories(apartment);
+    const listItemCategoryLabels = listItemCategories.map(([category]) => buildCategoryLabel(category));
+    const listItemCategoryValues = listItemCategories.map(([, value]) => value.weightedScore);
+    const listItemChartData = {
+        labels: listItemCategoryLabels,
+        datasets: [
+            {
+                data: listItemCategoryValues,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }
+        ]
+    };
+    const listItemChartRange = {
+        min: scoreRange.min,
+        max: (scoreRange.max * scoreRange.max) + scoreRange.max
     };
 
-    while (idx < apartmentCategoriesLength) {
-        let [categoryKey, categoryValue] = apartmentCategories[idx];
-        const categoryLabel = buildCategoryLabel(categoryKey);
-        const isScoreCategory = checkScoreCategory(categoryKey);
-
-        // If score category, display weighted score
-        if(isScoreCategory) {
-            categoryValue = categoryValue.weightedScore;
-        };
-
-        const category = (
-            <FlexBoxColumn $p={apartmentListItemCategoryPadding} key={idx}>
-                <Label>{categoryLabel}: </Label>
-                <TextSmall>{categoryValue}</TextSmall>
-            </FlexBoxColumn>
-        );
-
-        categoryStack.push(category);
-
-        const rowIsFull = categoryStack.length === categoriesPerCurrRow;
-        const lastApartmentCategory = (idx === (apartmentCategoriesLength - 1));
-
-        idx += 1;
-
-        if(rowIsFull || lastApartmentCategory) addCategoryRow();
+    return {
+        listItemChartData,
+        listItemChartRange
     };
-
-    return renderedCategories;
 };
 
 export { 
-    fillApartmentForm,
-    buildApartmentListItemCategories
+    fillApartmentListItemForm,
+    formatApartmentListItemChartData
 };

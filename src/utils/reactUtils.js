@@ -1,11 +1,12 @@
-import { categories, nonInputCategories, totalScore } from "./consts";
+import { categories, excludedInputCategories, excludedListItemCategories, prevWeightedScoreType, totalScore } from "./consts";
 
 const formatPriceDisplay = price => `$${price}`;
 
 const buildCategoryLabel = category => {
-    const labelName = category
-        .replace(/([A-Z])/g, ' $1')
-        .replace(/^./, str => str.toUpperCase());
+    // Add space before capital letters
+    const labelSpaced = category.replace(/([A-Z])/g, ' $1');
+    // Capitalize first letter
+    const labelName = labelSpaced.replace(/^./, str => str.toUpperCase());
 
     return labelName;
 };
@@ -16,18 +17,31 @@ const generateUniqueId = () => {
     return uniqueId;
 };
 
-const checkScoreCategory = (category) => category !== totalScore && categories.scoreCategories.includes(category);
+const checkScoreCategory = (category) => 
+    category !== totalScore && categories.scoreCategories.includes(category);
+
+const checkWeightedScoreType = (category, apartment) => 
+    typeof apartment[category] === prevWeightedScoreType;
 
 const checkPrevWeightedScore = (category, apartment) => 
-    checkScoreCategory(category) && typeof apartment[category] === 'object';
+    checkScoreCategory(category) && checkWeightedScoreType(category, apartment);
 
-const checkSortableNonScoreCategory = category => categories.sortableNonScoreCategories.includes(category);
+const checkSortableNonScoreCategory = category => 
+    categories.sortableNonScoreCategories.includes(category);
 
-const checkSortableCategory = category => checkSortableNonScoreCategory(category) || checkScoreCategory(category);
+const checkSortableCategory = category => 
+    checkSortableNonScoreCategory(category) || checkScoreCategory(category);
 
-const getInputScoreCategories = () => categories.scoreCategories.filter(scoreCategory => !nonInputCategories.includes(scoreCategory));
+const getInputScoreCategories = () => 
+    categories.scoreCategories.filter(scoreCategory => 
+        !excludedInputCategories.includes(scoreCategory));
 
-const getSortableCategories = () => [...categories.sortableNonScoreCategories, ...categories.scoreCategories];
+const getSortableCategories = () => 
+    [...categories.sortableNonScoreCategories, ...categories.scoreCategories];
+
+const getApartmentListItemCategories = apartment => 
+    Object.entries(apartment).filter(([category]) => 
+        checkScoreCategory(category) && !excludedListItemCategories.includes(category));
 
 export {
     formatPriceDisplay,
@@ -38,5 +52,6 @@ export {
     checkSortableNonScoreCategory,
     checkSortableCategory,
     getInputScoreCategories,
-    getSortableCategories
+    getSortableCategories,
+    getApartmentListItemCategories
 };

@@ -28,8 +28,8 @@ const buildStyledWord = (headingStyle, variant, secondToLastWord, isDesktop) => 
 
             return (
                 <HeadingCircleContainer $variant={variant} $rotate={spanProps.rotate.right} $p={headingCirclePadding}>
-                    <HeadingCircleDummySquare />
-                    <HeadingCircleContent $content={secondToLastWord} />
+                    <HeadingCircleDummySquare $variant={variant} />
+                    <HeadingCircleContent $variant={variant} $content={secondToLastWord} />
                 </HeadingCircleContainer>
             );
         };

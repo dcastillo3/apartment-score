@@ -11,6 +11,7 @@ const localStorageKeys = {
     settings: 'settings',
 };
 
+// Define sort orders
 const orders = {
     desc: 'desc',
     asc: 'asc'
@@ -26,6 +27,17 @@ const initialStates = {
     settings: []
 };
 
+// TO-DO: Build amenity filter categories
+// outdoor space yes/no
+// dishwasher yes/no
+// elevator building yes/no
+// pet friendly yes/no
+// storage space yes/no
+// laundry unit/building/none
+// doorman virtual/yes/no
+
+// TO-DO: Create descriptions for each category
+// TO-DO: Remove totalScore from scoreCategories. Research effect on app
 const categories = {
     sortableNonScoreCategories: [
         'price',
@@ -33,62 +45,53 @@ const categories = {
         'bathrooms',
     ],
     scoreCategories: [
-        'walkScore',
-        'locationScore',
-        'amenityScore',
-        'interiorScore',
+        'walk',
+        'amenity',
+        'privacy',
+        'size',
+        'layout',
+        'modern',
+        'kitchen',
+        'bathroom',
+        'bedroom',
+        'closet',
+        'office',
+        'view',
+        'location',
+        'proximity',
+        'commute',
         totalScore
     ]
 };
 
-const nonInputCategories = [
+// Define categories to exclude from input fields
+const excludedInputCategories = [
     totalScore
 ];
 
-const scoreOptions = [
-    {
-        label: '1',
-        value: 1
-    },
-    {
-        label: '2',
-        value: 2
-    },
-    {
-        label: '3',
-        value: 3
-    },
-    {
-        label: '4',
-        value: 4
-    },
-    {
-        label: '5',
-        value: 5
-    },
-    {
-        label: '6',
-        value: 6
-    },
-    {
-        label: '7',
-        value: 7
-    },
-    {
-        label: '8',
-        value: 8
-    },
-    {
-        label: '9',
-        value: 9
-    },
-    {
-        label: '10',
-        value: 10
-    }
+// Define categories to exclude from list items
+const excludedListItemCategories = [
+    totalScore
 ];
 
-const defaultScoreOption = 1;
+// Define the min and max score for each category
+const scoreRange = {
+    min: 1,
+    max: 5
+};
+
+// Define the min and max rooms
+const roomRange = {
+    min: 1,
+    max: 5
+};
+
+// Define the default score option
+const defaultScoreOption = 3;
+
+const defaultRoomOption = 1;
+
+const prevWeightedScoreType = 'object';
 
 export {
     apis,
@@ -98,7 +101,11 @@ export {
     localStorageKeys,
     orders,
     categories,
-    nonInputCategories,
-    scoreOptions,
-    defaultScoreOption
+    excludedInputCategories,
+    scoreRange,
+    roomRange,
+    defaultScoreOption,
+    defaultRoomOption,
+    prevWeightedScoreType,
+    excludedListItemCategories
 };

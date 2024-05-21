@@ -20,6 +20,7 @@ function Apartment() {
     } = useContext(ApartmentContext);
     const [sortCategory, setSortCategory] = useState(initialStates.sortCategory);
     const [order, setOrder] = useState(initialStates.order);
+    const [triggerSort, setTriggerSort] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const { settings } = useContext(SettingsContext);
     
@@ -37,10 +38,20 @@ function Apartment() {
         handleAddApartment(apartment, settings);
 
         toggleModal();
+
+        setTriggerSort(true);
     };
 
     const updateApartment = (id, apartment) => {
         handleUpdateApartment(id, apartment, settings);
+
+        setTriggerSort(true);
+    };
+
+    const deleteApartment = id => {
+        handleDeleteApartment(id);
+
+        setTriggerSort(true);
     };
 
     const handleChangeOrder = e => {
@@ -48,7 +59,7 @@ function Apartment() {
 
         setOrder(newOrder);
 
-        handleSortApartments(sortCategory, newOrder);
+        setTriggerSort(true);
     };
 
     const handleChangeSortCategory = e => {
@@ -56,18 +67,22 @@ function Apartment() {
 
         setSortCategory(newSortCategory);
 
-        handleSortApartments(newSortCategory, order);
+        setTriggerSort(true);
     };
 
-    //Sort apartments after changes to apartments
+    // Sort apartments after specified changes
     useEffect(() => {
-        handleSortApartments(sortCategory, order);
-    }, [apartments]);
+        if(triggerSort) {
+            handleSortApartments(sortCategory, order);
+
+            setTriggerSort(false);
+        };
+    }, [triggerSort]);
 
     const renderApartmentList = apartments.length > 0 && (
         <ApartmentList 
             apartments={apartments} 
-            handleDeleteApartment={handleDeleteApartment}
+            handleDeleteApartment={deleteApartment}
             handleUpdateApartment={updateApartment}
         />
     );
@@ -101,6 +116,7 @@ function Apartment() {
         <Option key={order} value={order}>{order}</Option>
     ));
 
+    // TO-DO: Refactor to separate component
     const renderApartmentSortMenu = apartments.length > 0 && (
         <FlexBox $center>
             <Box $m={[0, 1, 0, 0]}>
@@ -118,6 +134,8 @@ function Apartment() {
         </FlexBox>
     );
 
+    // TO-DO: Build overall score chart
+    // TO-DO: Build head to head comparison chart. Use AI to output conclusive statements based on data
     return (
         <ApartmentContainer $variant={cardProps.variant.background} $p={apartmentContainerPadding}>
             <Box>

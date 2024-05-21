@@ -1,5 +1,5 @@
 import React from 'react';
-import ApartmentListItem from './apartmentListItem';
+import ApartmentListItem from './components/apartmentListItem';
 import { FlexBoxColumn, Grid } from '../styled';
 import { useMediaQuery } from '../../hooks';
 
