@@ -3,7 +3,7 @@ import { useMediaQuery } from '../../../hooks';
 import { cardProps } from '../../styled';
 import { SettingsContainer } from './settingStyledComponents';
 import { Form, Notification } from '../../common';
-import { updateSettingsForm } from './settingForms';
+import { updatePriorityRatings } from './settingForms';
 import { notificationProps } from 'components/common/notification/notificationConsts';
 import { successUpdateMessage, successUpdateNotificationLength } from './settingConsts';
 import { fillUpdateSettingsForm, formatSettingsData } from './settingUtils';
@@ -14,7 +14,7 @@ function Settings() {
     const { handleUpdateAllApartments } = useContext(ApartmentContext);
     const { settings, handleUpdateSettings } = useContext(SettingsContext);
     const [successNotification, setSuccessNotification] = useState(false);
-    const filledUpdateSettingsForm = !_.isEmpty(settings) ? fillUpdateSettingsForm(settings, updateSettingsForm) : updateSettingsForm;
+    const filledUpdateSettingsForm = !_.isEmpty(settings) ? fillUpdateSettingsForm(settings, updatePriorityRatings) : updatePriorityRatings;
     const { isDesktop } = useMediaQuery();
     const settingsContainerPadding = isDesktop ? [5, 8] : [2];
     

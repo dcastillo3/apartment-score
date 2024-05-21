@@ -10,7 +10,7 @@ function Footer() {
     return (
         <FooterContainer $variant={cardProps.variant.background} $p={headerContainerPadding}>
             <FlexBox $center>
-                <Text>©2024 by Down & Jown</Text>
+                <Text>©2024 Apartment Score</Text>
             </FlexBox>
         </FooterContainer>
     );

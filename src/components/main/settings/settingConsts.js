@@ -1,4 +1,4 @@
-const successUpdateMessage = 'Settings updated successfully';
+const successUpdateMessage = 'Priority ratings saved!';
 
 const successUpdateNotificationLength = 3000;
 

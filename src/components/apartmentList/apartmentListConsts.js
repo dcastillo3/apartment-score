@@ -1,19 +1,14 @@
-const score = 'Score';
-
 const apartmentListItemCategoryPadding = [2, 2];
 
-// TODO: Make this dynamic
-const nonListItemCategories = [
-    'id',
-    'address',
-    'imageLink',
-    'link',
-    'price',
-    'totalScore'
-];
+const baseMapsUrl = 'https://www.google.com/maps?q=';
+
+const bedroomAbbreviation = 'BR';
+
+const bathroomAbbreviation = 'BA';
 
 export {
-    apartmentListItemCategoryPadding, 
-    score,
-    nonListItemCategories
+    apartmentListItemCategoryPadding,
+    baseMapsUrl,
+    bedroomAbbreviation,
+    bathroomAbbreviation
 };

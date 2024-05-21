@@ -206,6 +206,25 @@ const buildInput = (formField, formData, handleChangeField) => {
     };
 };
 
+const buildSelectOptionsFromRange = ({ min, max }) => {
+    const selectOptions = [];
+
+    for(let i = min; i <= max; i++) {
+        const label = i.toString();
+        const value = i;
+        const selectOption = {
+            label,
+            value
+        };
+
+        selectOptions.push(selectOption);
+    };
+
+    return selectOptions;
+};
+
+// TO-DO: buildSelectOptionsFromArr
+
 const getValidationProps = validations => {
     let validationProps = {};
 
@@ -231,5 +250,6 @@ const getValidationProps = validations => {
 
 export {
     buildFormData,
-    buildFormFields
+    buildFormFields,
+    buildSelectOptionsFromRange
 };
