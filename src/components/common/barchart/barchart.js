@@ -2,6 +2,7 @@ import React from 'react';
 import { Chart } from 'react-chartjs-2';
 import { 
     Chart as ChartJS,
+    BarController,
     BarElement,
     CategoryScale,
     LinearScale
@@ -12,6 +13,7 @@ import { BarChartProps } from './barchartConsts';
 import { useTheme } from 'styled-components';
 
 ChartJS.register(
+    BarController,
     BarElement,
     CategoryScale,
     LinearScale,
