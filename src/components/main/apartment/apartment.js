@@ -136,6 +136,7 @@ function Apartment() {
 
     // TO-DO: Build overall score chart
     // TO-DO: Build head to head comparison chart. Use AI to output conclusive statements based on data
+    // TO-DO: Build feature to select winning apartment. This apartment will be used to compare against other apartments and always be sorted first.
     return (
         <ApartmentContainer $variant={cardProps.variant.background} $p={apartmentContainerPadding}>
             <Box>
