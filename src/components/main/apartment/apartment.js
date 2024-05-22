@@ -5,10 +5,12 @@ import { ApartmentButtonHeaderContainer, ApartmentContainer } from './apartmentS
 import { categories, initialStates, orders } from '../../../utils/consts';
 import { ApartmentList } from '../../apartmentList';
 import { addApartmentForm } from './apartmentForms';
-import { Form, Heading, Modal, headingProps, modalProps } from '../../common';
+import { BarChart, Form, Heading, Modal, headingProps, modalProps } from '../../common';
 import { apartmentListHeading, buttonNames } from './apartmentConsts';
 import { ApartmentContext, SettingsContext } from 'context';
 import { buildCategoryLabel } from 'utils/reactUtils';
+import { formatApartmentsChartData } from './apartmentUtils';
+import { barChartProps } from 'components/common/barChart/barChartConsts';
 
 function Apartment() {
     const { 
@@ -23,6 +25,7 @@ function Apartment() {
     const [triggerSort, setTriggerSort] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const { settings } = useContext(SettingsContext);
+    const { apartmentChartData, apartmentChartRange } = formatApartmentsChartData(apartments);
     
     const { isDesktop } = useMediaQuery();
     const apartmentContainerPadding = isDesktop ? [5, 8] : [2];
@@ -80,11 +83,13 @@ function Apartment() {
     }, [triggerSort]);
 
     const renderApartmentList = apartments.length > 0 && (
-        <ApartmentList 
-            apartments={apartments} 
-            handleDeleteApartment={deleteApartment}
-            handleUpdateApartment={updateApartment}
-        />
+        <Box $p={[6, 0, 0, 0]} >
+            <ApartmentList 
+                apartments={apartments} 
+                handleDeleteApartment={deleteApartment}
+                handleUpdateApartment={updateApartment}
+            />
+        </Box>
     );
 
     const renderApartmentHeader = apartments.length > 0 && (
@@ -116,6 +121,16 @@ function Apartment() {
         <Option key={order} value={order}>{order}</Option>
     ));
 
+    // TO-DO: On apartment bar click, highlight and scroll to apartment in list
+    const renderApartmentsBarChart = apartments.length > 0 && isDesktop && (
+        <BarChart
+            type={barChartProps.type.bar}
+            barDirection={barChartProps.barDirection.vertical}
+            data={apartmentChartData}
+            range={apartmentChartRange}
+        />
+    );
+
     // TO-DO: Refactor to separate component
     const renderApartmentSortMenu = apartments.length > 0 && (
         <FlexBox $center>
@@ -134,34 +149,33 @@ function Apartment() {
         </FlexBox>
     );
 
-    // TO-DO: Build overall score chart
     // TO-DO: Build head to head comparison chart. Use AI to output conclusive statements based on data
     // TO-DO: Build feature to select winning apartment. This apartment will be used to compare against other apartments and always be sorted first.
     return (
         <ApartmentContainer $variant={cardProps.variant.background} $p={apartmentContainerPadding}>
-            <Box>
-                {renderApartmentHeader}
+            {renderApartmentHeader}
 
-                <ApartmentButtonHeaderContainer $hasApartments={apartments.length > 0} $p={apartmentButtonHeaderContainerPadding}>
-                    {renderApartmentSortMenu}
+            <ApartmentButtonHeaderContainer $hasApartments={apartments.length > 0} $p={apartmentButtonHeaderContainerPadding}>
+                {renderApartmentSortMenu}
 
-                    <Modal
-                        showModal={showModal}
-                        variant={modalProps.variant.backgroundLight}
-                        handleToggleModal={toggleModal}
-                        center
-                    >
-                        <Form
-                            formParams={addApartmentForm}
-                            handleSubmit={addApartment}
-                        />
-                    </Modal>
+                <Modal
+                    showModal={showModal}
+                    variant={modalProps.variant.backgroundLight}
+                    handleToggleModal={toggleModal}
+                    center
+                >
+                    <Form
+                        formParams={addApartmentForm}
+                        handleSubmit={addApartment}
+                    />
+                </Modal>
 
-                    <Button $size={addButtonSize} onClick={toggleModal}>
-                        {buttonNames.add}
-                    </Button>
-                </ApartmentButtonHeaderContainer>
-            </Box>
+                <Button $size={addButtonSize} onClick={toggleModal}>
+                    {buttonNames.add}
+                </Button>
+            </ApartmentButtonHeaderContainer>
+
+            {renderApartmentsBarChart}
 
             {renderApartmentList}
         </ApartmentContainer>
