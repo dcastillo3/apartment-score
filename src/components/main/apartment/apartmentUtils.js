@@ -1,4 +1,4 @@
-import { buildCategoryLabel } from "utils/reactUtils";
+import { buildCategoryLabel, getApartmentScoreCategories } from "utils/reactUtils";
 import { categories, defaultScoreOption, defaultRoomOption, roomRange, excludedInputCategories, scoreRange } from "../../../utils/consts";
 import { buildSelectOptionsFromRange } from "components/common/form/formUtils";
 
@@ -52,7 +52,34 @@ const buildApartmentScoreCategoryInputs = () => {
     return scoreCategoryInputs;
 };
 
+const formatApartmentsChartData = apartments => {
+    const apartmentLabels = apartments.map(apartment => apartment.address);
+    const apartmentValues = apartments.map(apartment => apartment.totalScore);
+    const apartmentChartData = {
+        labels: apartmentLabels,
+        datasets: [
+            {
+                data: apartmentValues,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }
+        ]
+    };
+    const scoreCategories = getApartmentScoreCategories();
+    const apartmentChartRange = {
+        min: scoreCategories.length * scoreRange.min,
+        max: scoreCategories.length * (scoreRange.max * scoreRange.max) + (scoreCategories.length * scoreRange.max)
+    };
+
+    return {
+        apartmentChartData,
+        apartmentChartRange
+    };
+};
+
 export {
     buildApartmentNonScoreSortableCategoryInputs,
-    buildApartmentScoreCategoryInputs
+    buildApartmentScoreCategoryInputs,
+    formatApartmentsChartData
 };

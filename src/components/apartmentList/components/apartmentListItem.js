@@ -10,6 +10,7 @@ import ApartmentListItemMapsLink from './apartmentListItemMapsLink';
 import ApartmentListItemDetails from './apartmentListItemDetails';
 import ApartmentListItemScoreBadge from './apartmentListItemScoreBadge';
 import ApartmentListItemCTARow from './apartmentListItemCTArow';
+import { barChartProps } from 'components/common/barChart/barChartConsts';
 
 function ApartmentListItem({apartment, handleDelete, handleUpdate}) {
     const { isDesktop } = useMediaQuery();
@@ -67,6 +68,8 @@ function ApartmentListItem({apartment, handleDelete, handleUpdate}) {
                 />
 
                 <BarChart
+                    type={barChartProps.type.bar}
+                    barDirection={barChartProps.barDirection.horizontal}
                     data={listItemChartData}
                     range={listItemChartRange}
                 />

@@ -43,6 +43,9 @@ const getApartmentListItemCategories = apartment =>
     Object.entries(apartment).filter(([category]) => 
         checkScoreCategory(category) && !excludedListItemCategories.includes(category));
 
+const getApartmentScoreCategories = () => 
+    categories.scoreCategories.filter(category => category !== totalScore);
+
 export {
     formatPriceDisplay,
     buildCategoryLabel,
@@ -53,5 +56,6 @@ export {
     checkSortableCategory,
     getInputScoreCategories,
     getSortableCategories,
-    getApartmentListItemCategories
+    getApartmentListItemCategories,
+    getApartmentScoreCategories
 };
