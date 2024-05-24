@@ -3,7 +3,7 @@ import { Anchor, Box, Card, FlexBoxColumn, cardProps } from '../../styled';
 import { updateApartmentForm } from '../../main/apartment/apartmentForms';
 import { BarChart, Form, Overlay, overlayProps } from '../../common';
 import { fillApartmentListItemForm, formatApartmentListItemChartData } from '../apartmentListUtils';
-import { ApartmentListItemImage } from '../apartmentListStyledComponents';
+import { ApartmentListItemContainer, ApartmentListItemImage } from '../apartmentListStyledComponents';
 import { useMediaQuery } from '../../../hooks';
 import { apartmentListItemCategoryPadding } from '../apartmentListConsts';
 import ApartmentListItemMapsLink from './apartmentListItemMapsLink';
@@ -12,7 +12,13 @@ import ApartmentListItemScoreBadge from './apartmentListItemScoreBadge';
 import ApartmentListItemCTARow from './apartmentListItemCTArow';
 import { barChartProps } from 'components/common/barChart/barChartConsts';
 
-function ApartmentListItem({apartment, handleDelete, handleUpdate}) {
+function ApartmentListItem({
+    apartment,
+    highlighted,
+    handleDelete,
+    handleUpdate,
+    apartmentRef
+}) {
     const { isDesktop } = useMediaQuery();
     const [showUpdateForm, setShowUpdateForm] = useState(false);
     const filledApartmentForm = fillApartmentListItemForm(apartment, updateApartmentForm);
@@ -80,10 +86,16 @@ function ApartmentListItem({apartment, handleDelete, handleUpdate}) {
     );
 
     return (
-        <Card $variant={cardProps.variant.backgroundLight} $m={[2, 2]} $p={[2, 2]}>
+        <ApartmentListItemContainer 
+            ref={apartmentRef} 
+            $variant={cardProps.variant.backgroundLight} 
+            $m={[2, 2]} 
+            $p={[2, 2]}
+            $highlighted={highlighted}
+        >
             {renderUpdateForm}
             {renderApartmentListItem}
-        </Card>
+        </ApartmentListItemContainer>
     );
 };
 

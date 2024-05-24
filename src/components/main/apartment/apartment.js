@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Box, Button, FlexBox, Option, Select, buttonProps, cardProps } from '../../styled';
 import { useMediaQuery } from '../../../hooks';
 import { ApartmentButtonHeaderContainer, ApartmentContainer } from './apartmentStyledComponents';
@@ -6,11 +6,13 @@ import { categories, initialStates, orders } from '../../../utils/consts';
 import { ApartmentList } from '../../apartmentList';
 import { addApartmentForm } from './apartmentForms';
 import { BarChart, Form, Heading, Modal, headingProps, modalProps } from '../../common';
-import { apartmentListHeading, buttonNames } from './apartmentConsts';
+import { apartmentListHeading, buttonNames, scrollOptions, transitionendEventName } from './apartmentConsts';
 import { ApartmentContext, SettingsContext } from 'context';
 import { buildCategoryLabel } from 'utils/reactUtils';
 import { formatApartmentsChartData } from './apartmentUtils';
 import { barChartProps } from 'components/common/barChart/barChartConsts';
+import _ from 'lodash';
+import smoothScrollIntoView from 'smooth-scroll-into-view-if-needed';
 
 function Apartment() {
     const { 
@@ -24,8 +26,11 @@ function Apartment() {
     const [order, setOrder] = useState(initialStates.order);
     const [triggerSort, setTriggerSort] = useState(true);
     const [showModal, setShowModal] = useState(false);
+    const [scrollToId, setScrollToId] = useState(null);
+    const [highlightId, setHighlightId] = useState(null);
     const { settings } = useContext(SettingsContext);
     const { apartmentChartData, apartmentChartRange } = formatApartmentsChartData(apartments);
+    const apartmentListRef = useRef({});
     
     const { isDesktop } = useMediaQuery();
     const apartmentContainerPadding = isDesktop ? [5, 8] : [2];
@@ -72,6 +77,52 @@ function Apartment() {
 
         setTriggerSort(true);
     };
+    
+    const handleBarClick = bar => {
+        const { id } = bar;
+        
+        setScrollToId(id);
+    };
+
+    // Scroll to apartment after specified changes
+    useEffect(() => {
+        let handleTransitionEnd;
+
+        if (scrollToId !== null && !_.isEmpty(apartmentListRef?.current?.[scrollToId])) {
+            const currApartmentElem = apartmentListRef.current[scrollToId].current;
+            // Scroll to the apartment in the list
+            const scrollAction = async () => {
+                await smoothScrollIntoView(currApartmentElem, scrollOptions);
+                // Highlight the apartment after the scroll is finished
+                setHighlightId(scrollToId);
+    
+                handleTransitionEnd = () => {
+                    // Remove the highlight when the transition has ended
+                    setHighlightId(null);
+                    
+                    // Remove the event listener
+                    currApartmentElem.removeEventListener(transitionendEventName, handleTransitionEnd);
+                };
+                
+                // Listen for the transitionend event
+                currApartmentElem.addEventListener(transitionendEventName, handleTransitionEnd);
+            };
+            
+            scrollAction();
+    
+            setScrollToId(null);
+        };
+    
+        // Cleanup function
+        return () => {
+            if (handleTransitionEnd) {
+                const currApartmentElem = apartmentListRef.current[scrollToId]?.current;
+                if (currApartmentElem) {
+                    currApartmentElem.removeEventListener('transitionend', handleTransitionEnd);
+                };
+            };
+        };
+    }, [scrollToId]);
 
     // Sort apartments after specified changes
     useEffect(() => {
@@ -84,8 +135,10 @@ function Apartment() {
 
     const renderApartmentList = apartments.length > 0 && (
         <Box $p={[6, 0, 0, 0]} >
-            <ApartmentList 
-                apartments={apartments} 
+            <ApartmentList
+                ref={apartmentListRef} 
+                apartments={apartments}
+                highlightId={highlightId} 
                 handleDeleteApartment={deleteApartment}
                 handleUpdateApartment={updateApartment}
             />
@@ -121,13 +174,13 @@ function Apartment() {
         <Option key={order} value={order}>{order}</Option>
     ));
 
-    // TO-DO: On apartment bar click, highlight and scroll to apartment in list
     const renderApartmentsBarChart = apartments.length > 0 && isDesktop && (
         <BarChart
             type={barChartProps.type.bar}
             barDirection={barChartProps.barDirection.vertical}
             data={apartmentChartData}
             range={apartmentChartRange}
+            handleBarClick={handleBarClick}
         />
     );
 

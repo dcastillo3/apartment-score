@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { FlexBox, Image } from '../styled';
+import { Card, FlexBox, Image } from '../styled';
 
 const ApartmentListItemDetailsContainer = styled(FlexBox)`
     justify-content: space-between;
@@ -12,7 +12,18 @@ const ApartmentListItemImage = styled(Image)`
     object-fit: cover;
 `;
 
+const ApartmentListItemContainer = styled(Card)`
+    ${({theme}) => `transition: ${theme.transitions.create(['background'], {
+        duration: theme.transitions.duration.standard,
+    })};`}
+
+    ${({$highlighted, theme}) => $highlighted && `
+        background: ${theme.palette.success.main};
+    `}
+`;
+
 export {
     ApartmentListItemDetailsContainer,
-    ApartmentListItemImage
+    ApartmentListItemImage,
+    ApartmentListItemContainer
 };

@@ -1,18 +1,31 @@
-import React from 'react';
+import React, { createRef, forwardRef } from 'react';
 import ApartmentListItem from './components/apartmentListItem';
 import { FlexBoxColumn, Grid } from '../styled';
 import { useMediaQuery } from '../../hooks';
+import { createApartmentRefs } from './apartmentListUtils';
 
-function ApartmentList({apartments, handleDeleteApartment, handleUpdateApartment}) {
+function ApartmentList({
+    apartments,
+    highlightId,
+    handleDeleteApartment,
+    handleUpdateApartment
+}, ref) {
     const { isDesktop } = useMediaQuery();
     const apartmentListMargin = isDesktop ? [0, 8] : null;
     const apartmentListItemSize = isDesktop ? 87 : 87;
+    
+    // Create refs for each apartment
+    createApartmentRefs(apartments, ref, createRef);
 
     const renderApartments = apartments.map((apartment, i) => {
+        const highlightedApartment = highlightId === apartment.id;
+
         return (
             <ApartmentListItem 
-                key={i} 
-                apartment={apartment} 
+                key={i}
+                apartmentRef={ref.current[apartment.id]}
+                apartment={apartment}
+                highlighted={highlightedApartment} 
                 handleDelete={handleDeleteApartment} 
                 handleUpdate={handleUpdateApartment}
             />
@@ -32,4 +45,5 @@ function ApartmentList({apartments, handleDeleteApartment, handleUpdateApartment
     );
 };
 
-export default ApartmentList;
+// Forward ref to parent component
+export default forwardRef(ApartmentList);
