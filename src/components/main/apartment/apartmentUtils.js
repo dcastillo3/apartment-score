@@ -1,4 +1,4 @@
-import { buildCategoryLabel, getApartmentScoreCategories } from "utils/reactUtils";
+import { buildCategoryLabel, getApartmentListItemCategories, getApartmentScoreCategories } from "utils/reactUtils";
 import { categories, defaultScoreOption, defaultRoomOption, roomRange, excludedInputCategories, scoreRange } from "../../../utils/consts";
 import { buildSelectOptionsFromRange } from "components/common/form/formUtils";
 
@@ -54,7 +54,10 @@ const buildApartmentScoreCategoryInputs = () => {
 
 const formatApartmentsChartData = apartments => {
     const apartmentLabels = apartments.map(apartment => apartment.address);
-    const apartmentValues = apartments.map(apartment => apartment.totalScore);
+    const apartmentValues = apartments.map(apartment => ({
+            id: apartment.id,
+            value: apartment.totalScore,
+        }));
     const apartmentChartData = {
         labels: apartmentLabels,
         datasets: [

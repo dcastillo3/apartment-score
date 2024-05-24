@@ -44,6 +44,7 @@ const theme = createTheme({
         backgroundLight: {
             main: "#f3f3f3",
             light: "#fff",
+            medium: "#e1e3e9",
             dark: "#2d3240"
         },
         action: {

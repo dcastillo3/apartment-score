@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Chart } from 'react-chartjs-2';
 import { 
     Chart as ChartJS,
@@ -9,9 +9,9 @@ import {
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { BarChartContainer } from './barChartStyledComponents';
-import { barChartOptions, defaultBarChartType, defaultBarDirection } from './barChartConsts';
+import { barChartOptions, defaultBarChartType, defaultBarDirection, elementsAtEventForMode } from './barChartConsts';
 import { useTheme } from 'styled-components';
-import { buildScales } from './barChartUtils';
+import { buildHeight, buildScales, formatBarChartData, pointerOnHover } from './barChartUtils';
 
 ChartJS.register(
     BarController,
@@ -27,28 +27,48 @@ function BarChart({
     data, 
     range, 
     barDirection = defaultBarDirection,
-    type = defaultBarChartType 
+    type = defaultBarChartType,
+    handleBarClick = null 
 }) {
     const theme = useTheme();
-    // Set average row height for each label. theme.spacing outputs a value in pixels, remove px to get number
-    const rowHeight = parseInt(theme.spacing(6).replace('px', ''));
-    // Calculate height based on number of labels
-    const height = data?.labels?.length * rowHeight;
+    const barChartRef = useRef(null);
+    const formattedData = handleBarClick ? formatBarChartData(data) : data;
+    const height = buildHeight(barDirection, theme, data);
     const scales = buildScales(barDirection, range);
-        
-        return (
-            <BarChartContainer>
-                <Chart
-                    type={type}
-                    data={data}
-                    height={height}
-                    options={{
-                        ...barChartOptions,
-                        indexAxis: barDirection,
-                        scales
-                    }}
-                />
-            </BarChartContainer>
+
+    const handleClick = e => {
+        const barChart = barChartRef.current;
+
+        if (barChart) {
+            const elements = barChart.getElementsAtEventForMode(e, elementsAtEventForMode, { intersect: true }, false);
+            
+            if (elements.length > 0) {
+                const datasetIndex = elements[0].datasetIndex;
+                const index = elements[0].index;
+                // Access original data from the dataset
+                const clickedElement = data.datasets[datasetIndex].data[index];
+
+                handleBarClick(clickedElement);
+            };
+        };
+    };
+    
+    return (
+        <BarChartContainer>
+            <Chart
+                ref={barChartRef}
+                type={type}
+                data={formattedData}
+                height={height}
+                options={{
+                    ...barChartOptions,
+                    indexAxis: barDirection,
+                    scales,
+                    onClick: handleBarClick ? handleClick : null,
+                    onHover: handleBarClick ? pointerOnHover : null
+                }}
+            />
+        </BarChartContainer>
         );
 };
 

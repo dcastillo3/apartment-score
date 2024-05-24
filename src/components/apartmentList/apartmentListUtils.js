@@ -48,7 +48,17 @@ const formatApartmentListItemChartData = apartment => {
     };
 };
 
+const createApartmentRefs = (apartments, ref, createRef) => {
+    apartments.forEach(apartment => {
+        // If the ref doesn't exist yet, create it
+        if (!ref.current[apartment.id]) {
+            ref.current[apartment.id] = createRef(null);
+        }
+    });
+};
+
 export { 
     fillApartmentListItemForm,
-    formatApartmentListItemChartData
+    formatApartmentListItemChartData,
+    createApartmentRefs
 };

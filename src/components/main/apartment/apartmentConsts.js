@@ -7,7 +7,18 @@ const buttonNames = {
 
 const apartmentListHeading = 'My Apartments';
 
+const scrollOptions = {
+    scrollMode: 'if-needed',
+    behavior: 'smooth',
+    block: 'start',
+    inline: 'nearest'
+};
+
+const transitionendEventName = 'transitionend';
+
 export {
     buttonNames,
-    apartmentListHeading
+    apartmentListHeading,
+    scrollOptions,
+    transitionendEventName
 };
