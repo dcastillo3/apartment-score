@@ -1,18 +1,19 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Box, Button, FlexBox, Option, Select, buttonProps, cardProps } from '../../styled';
+import { Box, Button, FlexBox, Input, Option, Select, buttonProps, cardProps, Form as StyledForm } from '../../styled';
 import { useMediaQuery } from '../../../hooks';
-import { ApartmentButtonHeaderContainer, ApartmentContainer } from './apartmentStyledComponents';
+import { ApartmentsFilterContainer, ApartmentsContainer, ApartmentsFilterContainerRight, ApartmentsFilterContainerLeft } from './apartmentStyledComponents';
 import { categories, initialStates, orders } from '../../../utils/consts';
 import { ApartmentList } from '../../apartmentList';
 import { addApartmentForm } from './apartmentForms';
 import { BarChart, Form, Heading, Modal, headingProps, modalProps } from '../../common';
-import { apartmentListHeading, buttonNames, scrollOptions, transitionendEventName } from './apartmentConsts';
+import { apartmentListHeading, buttonNames, scrollOptions, searchPlaceholder, searchUrlQueryParam, transitionendEventName } from './apartmentConsts';
 import { ApartmentContext, SettingsContext } from 'context';
 import { buildCategoryLabel } from 'utils/reactUtils';
-import { formatApartmentsChartData } from './apartmentUtils';
+import { filterApartmentsByQuery, formatApartmentsChartData } from './apartmentUtils';
 import { barChartProps } from 'components/common/barChart/barChartConsts';
 import _ from 'lodash';
 import smoothScrollIntoView from 'smooth-scroll-into-view-if-needed';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function Apartment() {
     const { 
@@ -22,21 +23,24 @@ function Apartment() {
         handleUpdateApartment,
         handleSortApartments 
     } = useContext(ApartmentContext);
+    const navigate = useNavigate();
+    const location = useLocation();
     const [sortCategory, setSortCategory] = useState(initialStates.sortCategory);
     const [order, setOrder] = useState(initialStates.order);
     const [triggerSort, setTriggerSort] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [scrollToId, setScrollToId] = useState(null);
     const [highlightId, setHighlightId] = useState(null);
+    const [search, setSearch] = useState(initialStates.search);
     const { settings } = useContext(SettingsContext);
-    const { apartmentChartData, apartmentChartRange } = formatApartmentsChartData(apartments);
     const apartmentListRef = useRef({});
-    
     const { isDesktop } = useMediaQuery();
+
+    const filteredApartments = filterApartmentsByQuery(apartments, search);
+    const { apartmentChartData, apartmentChartRange } = formatApartmentsChartData(filteredApartments);
     const apartmentContainerPadding = isDesktop ? [5, 8] : [2];
     const apartmentButtonHeaderContainerPadding = isDesktop ? [5, 0] : [2];
     const headingMargin = isDesktop ? [0, 8] : [0, 5];
-    const addButtonSize = isDesktop ? buttonProps.size.medium : buttonProps.size.small;
 
     const toggleModal = () => {
         setShowModal(!showModal);
@@ -76,6 +80,22 @@ function Apartment() {
         setSortCategory(newSortCategory);
 
         setTriggerSort(true);
+    };
+
+    const handleChangeSearch = e => {
+        const { value: newSearch } = e.target;
+
+        setSearch(newSearch);
+
+        setTriggerSort(true);
+    };
+
+    const handleSubmitSearch = e => {
+        e.preventDefault();
+
+        const urlQueryParam = `${searchUrlQueryParam}${search}`;
+
+        navigate(urlQueryParam);
     };
     
     const handleBarClick = bar => {
@@ -126,18 +146,29 @@ function Apartment() {
 
     // Sort apartments after specified changes
     useEffect(() => {
-        if(triggerSort) {
-            handleSortApartments(sortCategory, order);
+        if(!triggerSort) return;
 
-            setTriggerSort(false);
-        };
+        handleSortApartments(sortCategory, order);
+
+        setTriggerSort(false);
     }, [triggerSort]);
 
-    const renderApartmentList = apartments.length > 0 && (
+    // Read search query params from URL
+    useEffect(() => {
+        if(!location.search) return;
+
+        const searchParams = new URLSearchParams(location.search);
+        const searchQuery = searchParams.get('search');
+
+        setSearch(searchQuery);
+    }, []);
+    
+
+    const renderApartmentList = filteredApartments.length > 0 && (
         <Box $p={[6, 0, 0, 0]} >
             <ApartmentList
                 ref={apartmentListRef} 
-                apartments={apartments}
+                apartments={filteredApartments}
                 highlightId={highlightId} 
                 handleDeleteApartment={deleteApartment}
                 handleUpdateApartment={updateApartment}
@@ -145,7 +176,7 @@ function Apartment() {
         </Box>
     );
 
-    const renderApartmentHeader = apartments.length > 0 && (
+    const renderApartmentsHeader = filteredApartments.length > 0 && (
         <Box $m={headingMargin}>
             <Heading
                 variant={headingProps.variant.success}
@@ -154,7 +185,7 @@ function Apartment() {
         </Box>
     );
 
-    const renderApartmentSortMenuNonScoreCategories = categories.sortableNonScoreCategories.map(category => {
+    const renderApartmentsSortMenuNonScoreCategories = categories.sortableNonScoreCategories.map(category => {
         const categoryLabel = buildCategoryLabel(category);
 
         return (
@@ -162,7 +193,7 @@ function Apartment() {
         );
     });
 
-    const renderApartmentSortMenuScoreCategories = categories.scoreCategories.map(category => {
+    const renderApartmentsSortMenuScoreCategories = categories.scoreCategories.map(category => {
         const categoryLabel = buildCategoryLabel(category);
 
         return (
@@ -170,11 +201,11 @@ function Apartment() {
         );
     });
 
-    const renderApartmentSortMenuOrderOptions = Object.values(orders).map(order => (
+    const renderApartmentsSortMenuOrderOptions = Object.values(orders).map(order => (
         <Option key={order} value={order}>{order}</Option>
     ));
 
-    const renderApartmentsBarChart = apartments.length > 0 && isDesktop && (
+    const renderApartmentsBarChart = filteredApartments.length > 0 && isDesktop && (
         <BarChart
             type={barChartProps.type.bar}
             barDirection={barChartProps.barDirection.vertical}
@@ -185,53 +216,68 @@ function Apartment() {
     );
 
     // TO-DO: Refactor to separate component
-    const renderApartmentSortMenu = apartments.length > 0 && (
+    const renderApartmentsSortMenu = filteredApartments.length > 0 && (
         <FlexBox $center>
             <Box $m={[0, 1, 0, 0]}>
                 <Select onChange={handleChangeSortCategory} value={sortCategory}>
-                    {renderApartmentSortMenuNonScoreCategories}
-                    {renderApartmentSortMenuScoreCategories}
+                    {renderApartmentsSortMenuNonScoreCategories}
+                    {renderApartmentsSortMenuScoreCategories}
                 </Select>
             </Box>
 
             <Box $m={[0, 0, 0, 1]}>
                 <Select onChange={handleChangeOrder} value={order}>
-                    {renderApartmentSortMenuOrderOptions}
+                    {renderApartmentsSortMenuOrderOptions}
                 </Select>
             </Box>
         </FlexBox>
     );
 
+    const renderApartmentsSearch = filteredApartments.length > 0 && (
+        <Box $m={[0, 0, 0, 2]}>
+            <StyledForm onSubmit={handleSubmitSearch}>
+                <Input onChange={handleChangeSearch} value={search} placeholder={searchPlaceholder} />
+            </StyledForm>
+        </Box>
+    );
+
     // TO-DO: Build head to head comparison chart. Use AI to output conclusive statements based on data
     // TO-DO: Build feature to select winning apartment. This apartment will be used to compare against other apartments and always be sorted first.
     return (
-        <ApartmentContainer $variant={cardProps.variant.background} $p={apartmentContainerPadding}>
-            {renderApartmentHeader}
+        <ApartmentsContainer $variant={cardProps.variant.background} $p={apartmentContainerPadding}>
+            {renderApartmentsHeader}
 
-            <ApartmentButtonHeaderContainer $hasApartments={apartments.length > 0} $p={apartmentButtonHeaderContainerPadding}>
-                {renderApartmentSortMenu}
+            <ApartmentsFilterContainer $hasApartments={filteredApartments.length > 0} $p={apartmentButtonHeaderContainerPadding}>
+                <ApartmentsFilterContainerLeft>
+                    {renderApartmentsSortMenu}
+                </ApartmentsFilterContainerLeft>
 
-                <Modal
-                    showModal={showModal}
-                    variant={modalProps.variant.backgroundLight}
-                    handleToggleModal={toggleModal}
-                    center
-                >
-                    <Form
-                        formParams={addApartmentForm}
-                        handleSubmit={addApartment}
-                    />
-                </Modal>
+                <ApartmentsFilterContainerRight>
+                    {renderApartmentsSearch}
 
-                <Button $size={addButtonSize} onClick={toggleModal}>
-                    {buttonNames.add}
-                </Button>
-            </ApartmentButtonHeaderContainer>
+                    <Modal
+                        showModal={showModal}
+                        variant={modalProps.variant.backgroundLight}
+                        handleToggleModal={toggleModal}
+                        center
+                    >
+                        <Form
+                            formParams={addApartmentForm}
+                            handleSubmit={addApartment}
+                        />
+                    </Modal>
+
+                    {/* TO-DO: Refactor add apartment button to float bottom right when not desktop */}
+                    <Button $size={buttonProps.size.small} $m={[0, 0, 0, 2]} onClick={toggleModal}>
+                        {buttonNames.add}
+                    </Button>
+                </ApartmentsFilterContainerRight>
+            </ApartmentsFilterContainer>
 
             {renderApartmentsBarChart}
 
             {renderApartmentList}
-        </ApartmentContainer>
+        </ApartmentsContainer>
     );
 };
 

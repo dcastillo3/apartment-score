@@ -1,14 +1,25 @@
 import styled from "styled-components";
 import { Card, FlexBox } from "../../styled";
 
-const ApartmentContainer = styled(Card)`
+const ApartmentsContainer = styled(Card)`
 `;
 
-const ApartmentButtonHeaderContainer = styled(FlexBox)`
-    justify-content: ${({$hasApartments}) => ($hasApartments ? "space-between" : "flex-end")};
+const ApartmentsFilterContainer = styled(FlexBox)`
+`;
+
+const ApartmentsFilterContainerLeft = styled(FlexBox)`
+    align-items: flex-end;
+`;
+
+const ApartmentsFilterContainerRight = styled(FlexBox)`
+    flex: 1;
+    align-items: flex-end;
+    justify-content: flex-end;
 `;
 
 export {
-    ApartmentContainer,
-    ApartmentButtonHeaderContainer
+    ApartmentsContainer,
+    ApartmentsFilterContainer,
+    ApartmentsFilterContainerLeft,
+    ApartmentsFilterContainerRight
 };

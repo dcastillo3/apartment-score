@@ -24,7 +24,8 @@ const initialStates = {
     sortCategory: totalScore,
     order: orders.desc,
     apartments: [],
-    settings: []
+    settings: [],
+    search: '',
 };
 
 // TO-DO: Build amenity filter categories

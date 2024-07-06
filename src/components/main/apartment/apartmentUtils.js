@@ -81,8 +81,18 @@ const formatApartmentsChartData = apartments => {
     };
 };
 
+const filterApartmentsByQuery = (apartments, query = '') => {
+    if(!query) return apartments;
+
+    const filteredApartments = apartments.filter(({ address = '' }) =>
+        address.toLowerCase().includes(query.toLowerCase()));
+
+    return filteredApartments;
+};
+
 export {
     buildApartmentNonScoreSortableCategoryInputs,
     buildApartmentScoreCategoryInputs,
-    formatApartmentsChartData
+    formatApartmentsChartData,
+    filterApartmentsByQuery
 };

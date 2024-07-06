@@ -16,9 +16,15 @@ const scrollOptions = {
 
 const transitionendEventName = 'transitionend';
 
+const searchPlaceholder = 'Search Apartments';
+
+const searchUrlQueryParam = '?search='; 
+
 export {
     buttonNames,
     apartmentListHeading,
     scrollOptions,
-    transitionendEventName
+    transitionendEventName,
+    searchPlaceholder,
+    searchUrlQueryParam
 };

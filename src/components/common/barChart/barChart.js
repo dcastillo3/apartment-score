@@ -54,7 +54,7 @@ function BarChart({
     };
     
     return (
-        <BarChartContainer>
+        <BarChartContainer $p={[4, 0, 0, 0]}>
             <Chart
                 ref={barChartRef}
                 type={type}
