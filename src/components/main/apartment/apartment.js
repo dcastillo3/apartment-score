@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Box, Button, FlexBox, Input, Option, Select, buttonProps, cardProps, Form as StyledForm } from '../../styled';
 import { useMediaQuery } from '../../../hooks';
-import { ApartmentsFilterContainer, ApartmentsContainer, ApartmentsFilterContainerRight, ApartmentsFilterContainerLeft } from './apartmentStyledComponents';
+import { ApartmentsFilterContainer, ApartmentsContainer, ApartmentsFilterContainerRight, ApartmentsFilterContainerLeft, ApartmentsMobileAddButtonContainer, ApartmentsMobileAddButtonIconContainer } from './apartmentStyledComponents';
 import { categories, initialStates, orders } from '../../../utils/consts';
 import { ApartmentList } from '../../apartmentList';
 import { addApartmentForm } from './apartmentForms';
@@ -14,6 +14,8 @@ import { barChartProps } from 'components/common/barChart/barChartConsts';
 import _ from 'lodash';
 import smoothScrollIntoView from 'smooth-scroll-into-view-if-needed';
 import { useNavigate, useLocation } from 'react-router-dom';
+import AddHomeIcon from '@mui/icons-material/AddHome';
+import { Icon } from '@mui/material';
 
 function Apartment() {
     const { 
@@ -241,6 +243,22 @@ function Apartment() {
         </Box>
     );
 
+    const renderAddApartmentButton = isDesktop && (
+        <Button $size={buttonProps.size.small} $m={[0, 0, 0, 2]} onClick={toggleModal}>
+            {buttonNames.add}
+        </Button>
+    );
+
+    const renderMobileAddApartmentButton = !isDesktop && (
+        <ApartmentsMobileAddButtonContainer>
+            <Button $size={buttonProps.size.small} $p={[2, 4]} onClick={toggleModal}>
+                <ApartmentsMobileAddButtonIconContainer>
+                    <Icon component={AddHomeIcon} />
+                </ApartmentsMobileAddButtonIconContainer>
+            </Button>
+        </ApartmentsMobileAddButtonContainer>
+    );
+
     // TO-DO: Build head to head comparison chart. Use AI to output conclusive statements based on data
     // TO-DO: Build feature to select winning apartment. This apartment will be used to compare against other apartments and always be sorted first.
     return (
@@ -267,10 +285,8 @@ function Apartment() {
                         />
                     </Modal>
 
-                    {/* TO-DO: Refactor add apartment button to float bottom right when not desktop */}
-                    <Button $size={buttonProps.size.small} $m={[0, 0, 0, 2]} onClick={toggleModal}>
-                        {buttonNames.add}
-                    </Button>
+                    {renderAddApartmentButton}
+                    {renderMobileAddApartmentButton}
                 </ApartmentsFilterContainerRight>
             </ApartmentsFilterContainer>
 
