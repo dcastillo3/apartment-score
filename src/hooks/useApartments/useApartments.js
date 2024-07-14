@@ -7,8 +7,8 @@ import { checkScoreCategory } from 'utils/reactUtils';
 function useApartments() {
     const [apartments, setApartments] = useState(() => getStateFromLocalStorage(localStorageKeys.apartments));
 
-    const handleAddApartment = (apartment, settings) => {
-        const newApartment = buildNewApartment(apartment, settings);
+    const handleAddApartment = (apartment, scoreSettings) => {
+        const newApartment = buildNewApartment(apartment, scoreSettings);
         const newApartments = [newApartment, ...apartments];
 
         // Persist apartments in local storage
@@ -17,9 +17,9 @@ function useApartments() {
         setApartments(newApartments);
     };
 
-    const handleUpdateApartment = (id, apartment, settings) => {
+    const handleUpdateApartment = (id, apartment, scoreSettings) => {
         const newApartments = apartments.map(prevApartment =>
-            prevApartment.id === id ? buildNewApartment(apartment, settings) : prevApartment
+            prevApartment.id === id ? buildNewApartment(apartment, scoreSettings) : prevApartment
         );
 
         // Persist apartments in local storage
@@ -28,9 +28,9 @@ function useApartments() {
         setApartments(newApartments);
     };
 
-    const handleUpdateAllApartments = settings => {
+    const handleUpdateAllApartments = scoreSettings => {
         const newApartments = apartments.map(prevApartment => 
-            buildNewApartment(prevApartment, settings)
+            buildNewApartment(prevApartment, scoreSettings)
         );
         
         // Persist apartments in local storage

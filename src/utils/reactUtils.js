@@ -1,4 +1,4 @@
-import { categories, excludedInputCategories, excludedListItemCategories, prevWeightedScoreType, totalScore } from "./consts";
+import { categories, excludedInputCategories, excludedListItemCategories, Notes, prevWeightedScoreType, totalScore } from "./consts";
 
 const formatPriceDisplay = price => `$${price}`;
 
@@ -10,6 +10,10 @@ const buildCategoryLabel = category => {
 
     return labelName;
 };
+
+const buildCategoryNoteId = category => `${category}${Notes}`;
+
+const getCategoryFromNoteId = noteId => noteId.replace(Notes, '');
 
 const generateUniqueId = () => {
     const uniqueId = Math.round(Math.random() * 10 * Date.now());
@@ -49,6 +53,8 @@ const getApartmentScoreCategories = () =>
 export {
     formatPriceDisplay,
     buildCategoryLabel,
+    buildCategoryNoteId,
+    getCategoryFromNoteId,
     generateUniqueId,
     checkScoreCategory,
     checkPrevWeightedScore,
@@ -57,5 +63,5 @@ export {
     getInputScoreCategories,
     getSortableCategories,
     getApartmentListItemCategories,
-    getApartmentScoreCategories
+    getApartmentScoreCategories,
 };

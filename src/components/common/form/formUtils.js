@@ -3,10 +3,19 @@ import { useDropzone } from 'react-dropzone';
 import _ from 'lodash/core';
 import { Box, Card, DragAndDrop, FlexBox, FlexBoxColumn, Input, Label, Option, Select, Text, TextSmall, cardProps } from '../../styled';
 import { uploadMessage } from './formConsts';
-import { FormTextArea, HiddenFormFieldContainer, UploadMessageText } from './formStyledComponents';
+import { FormIconContainer, FormTextArea, HiddenFormFieldContainer, UploadMessageText } from './formStyledComponents';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { Icon, Tooltip } from '@mui/material';
 
-const buildFormData = inputs =>
-    inputs.reduce((prevVal, { id, defaultValue }) => ({ ...prevVal, [id]: defaultValue }), {});
+const buildFormData = inputs => {
+    const formData = inputs.reduce((prevInputs, input) => {
+        if(input.inputType === 'group') return { ...prevInputs, ...buildFormData(input.inputs) };
+        
+        return { ...prevInputs, [input.id]: input.defaultValue };
+    }, {});
+
+    return formData;
+};
 
 const buildFormFields = (formFields, formData, handleChangeField, fieldsPerRow) => {
     const renderedFormFields = [];
@@ -62,42 +71,106 @@ const buildInput = (formField, formData, handleChangeField) => {
         inputType,
         additionalProps,
         validations,
+        tooltip,
         options
     } = formField;
     const inputValue = formData[id];
+    // TO-DO: Build tooltip into switch statement options
 
     switch(inputType) {
+        case 'group': {
+            const { inputs } = formField;
+            const renderedGroup = inputs.map(input => buildInput(input, formData, handleChangeField));
+
+            return (
+                <Card $variant={cardProps.variant.backgroundLight} $m={[1]} key={id} $wrap={true}>
+                    {renderedGroup}
+                </Card>
+            );
+        };
         case 'text': {
+            const renderTooltip = tooltip && (
+                <Tooltip title={tooltip} placement="right" arrow>
+                    <FormIconContainer $p={[0, 1]}>
+                        <Icon component={InfoOutlinedIcon} />
+                    </FormIconContainer>
+                </Tooltip>
+            );
+            
             return (
                 <FlexBoxColumn $m={[3]} key={id} $wrap={true}>
-                    <Label>{labelName}</Label>
+                    <FlexBox>
+                        <Label>{labelName}</Label>
+
+                        {renderTooltip}
+                    </FlexBox>
+
                     <Input onChange={handleChangeField} value={inputValue} type={inputType} id={id} name={id} {...additionalProps} />
                 </FlexBoxColumn>
             );
         };
 
         case 'number': {
+            const renderTooltip = tooltip && (
+                <Tooltip title={tooltip} placement="right" arrow>
+                    <FormIconContainer $p={[0, 1]}>
+                        <Icon component={InfoOutlinedIcon} />
+                    </FormIconContainer>
+                </Tooltip>
+            );
+            
             return (
                 <FlexBoxColumn $m={[3]} key={id} $wrap={true}>
-                    <Label>{labelName}</Label>
+                    <FlexBox>
+                        <Label>{labelName}</Label>
+
+                        {renderTooltip}
+                    </FlexBox>
+
                     <Input onChange={handleChangeField} value={inputValue} type={inputType} id={id} name={id} {...additionalProps} />
                 </FlexBoxColumn>
             );
         };
 
         case 'textarea': {
+            const renderTooltip = tooltip && (
+                <Tooltip title={tooltip} placement="right" arrow>
+                    <FormIconContainer $p={[0, 1]}>
+                        <Icon component={InfoOutlinedIcon} />
+                    </FormIconContainer>
+                </Tooltip>
+            );
+
             return (
                 <FlexBoxColumn $m={[3]} key={id} $wrap={true}>
-                    <Label>{labelName}</Label>
+                    <FlexBox>
+                        <Label>{labelName}</Label>
+
+                        {renderTooltip}
+                    </FlexBox>
+                    
                     <FormTextArea onChange={handleChangeField} value={inputValue} type={inputType} id={id} name={id} {...additionalProps} />
                 </FlexBoxColumn>
             );
         };
 
         case 'select': {
+            const renderTooltip = tooltip && (
+                <Tooltip title={tooltip} placement="right" arrow>
+                    <FormIconContainer $p={[0, 1]}>
+                        <Icon component={InfoOutlinedIcon} />
+                    </FormIconContainer>
+                </Tooltip>
+            );
+            
             return (
                 <FlexBoxColumn $m={[3]} key={id} $wrap={true}>
-                    <Label>{labelName}</Label>
+                    <FlexBox>
+                        <Label>{labelName}</Label>
+
+                        {renderTooltip}
+                    </FlexBox>
+                    
                     <Select onChange={handleChangeField} value={inputValue} id={id} name={id} {...additionalProps}>
                         {options.map(option => (
                             <Option key={option.value} value={option.value}>

@@ -1,4 +1,4 @@
-import { buildCategoryLabel, getApartmentListItemCategories, getApartmentScoreCategories } from "utils/reactUtils";
+import { buildCategoryLabel, getApartmentScoreCategories, getCategoryFromNoteId } from "utils/reactUtils";
 import { categories, defaultScoreOption, defaultRoomOption, roomRange, excludedInputCategories, scoreRange } from "../../../utils/consts";
 import { buildSelectOptionsFromRange } from "components/common/form/formUtils";
 
@@ -10,6 +10,7 @@ const buildApartmentNonScoreSortableCategoryInputs = () => {
             inputType: 'select',
             defaultValue: defaultRoomOption,
             options: buildSelectOptionsFromRange(roomRange),
+            tooltip: '',
             additionalProps: {},
             validations: {},
             fullRow: false
@@ -43,6 +44,7 @@ const buildApartmentScoreCategoryInputs = () => {
             options: buildSelectOptionsFromRange(scoreRange),
             additionalProps: {},
             validations: {},
+            tooltip: '',
             fullRow: false
         };
 
@@ -90,9 +92,30 @@ const filterApartmentsByQuery = (apartments, query = '') => {
     return filteredApartments;
 };
 
+const fillAddApartmentForm = (noteSettings, addApartmentForm) => {
+    const filledInputs = addApartmentForm.inputs.map(formField => {
+        // Separate `Notes` from Find note setting id that matches form field id
+        const noteSetting = noteSettings.find(noteSetting => getCategoryFromNoteId(noteSetting.id) === formField.id);
+        const newFormField = { ...formField };
+
+        // Populate tooltip with saved user note
+        if(!_.isEmpty(noteSetting)) newFormField.tooltip = noteSetting.notes;
+
+        return newFormField;
+    });
+
+    const newAddApartmentForm = { 
+        ...addApartmentForm,
+        inputs: filledInputs
+    };
+
+    return newAddApartmentForm;
+};
+
 export {
     buildApartmentNonScoreSortableCategoryInputs,
     buildApartmentScoreCategoryInputs,
     formatApartmentsChartData,
-    filterApartmentsByQuery
+    filterApartmentsByQuery,
+    fillAddApartmentForm
 };

@@ -9,7 +9,7 @@ import { BarChart, Form, Heading, Modal, headingProps, modalProps } from '../../
 import { apartmentListHeading, buttonNames, scrollOptions, searchPlaceholder, searchUrlQueryParam, transitionendEventName } from './apartmentConsts';
 import { ApartmentContext, SettingsContext } from 'context';
 import { buildCategoryLabel } from 'utils/reactUtils';
-import { filterApartmentsByQuery, formatApartmentsChartData } from './apartmentUtils';
+import { fillAddApartmentForm, filterApartmentsByQuery, formatApartmentsChartData } from './apartmentUtils';
 import { barChartProps } from 'components/common/barChart/barChartConsts';
 import _ from 'lodash';
 import smoothScrollIntoView from 'smooth-scroll-into-view-if-needed';
@@ -34,12 +34,13 @@ function Apartment() {
     const [scrollToId, setScrollToId] = useState(null);
     const [highlightId, setHighlightId] = useState(null);
     const [search, setSearch] = useState(initialStates.search);
-    const { settings } = useContext(SettingsContext);
+    const { scoreSettings, noteSettings } = useContext(SettingsContext);
     const apartmentListRef = useRef({});
     const { isDesktop } = useMediaQuery();
 
     const filteredApartments = filterApartmentsByQuery(apartments, search);
     const { apartmentChartData, apartmentChartRange } = formatApartmentsChartData(filteredApartments);
+    const filledAddApartmentForm = !_.isEmpty(noteSettings) ? fillAddApartmentForm(noteSettings, addApartmentForm) : addApartmentForm;
     const apartmentContainerPadding = isDesktop ? [5, 8] : [2];
     const apartmentButtonHeaderContainerPadding = isDesktop ? [5, 0] : [2];
     const headingMargin = isDesktop ? [0, 8] : [0, 5];
@@ -49,7 +50,7 @@ function Apartment() {
     };
 
     const addApartment = apartment => {
-        handleAddApartment(apartment, settings);
+        handleAddApartment(apartment, scoreSettings);
 
         toggleModal();
 
@@ -57,7 +58,7 @@ function Apartment() {
     };
 
     const updateApartment = (id, apartment) => {
-        handleUpdateApartment(id, apartment, settings);
+        handleUpdateApartment(id, apartment, scoreSettings);
 
         setTriggerSort(true);
     };
@@ -280,7 +281,7 @@ function Apartment() {
                         center
                     >
                         <Form
-                            formParams={addApartmentForm}
+                            formParams={filledAddApartmentForm}
                             handleSubmit={addApartment}
                         />
                     </Modal>

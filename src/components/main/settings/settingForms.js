@@ -2,7 +2,7 @@ import { buildSettingsScoreCategoryInputs } from "./settingUtils";
 
 const categoryScoreInputs = buildSettingsScoreCategoryInputs(); 
 
-const updatePriorityRatings = {
+const updatePriorityRatingsForm = {
     title: 'Your Priority Ratings',
     buttonName: 'Save',
     fieldsPerRow: 2,
@@ -12,5 +12,5 @@ const updatePriorityRatings = {
 };
 
 export {
-    updatePriorityRatings
+    updatePriorityRatingsForm
 };

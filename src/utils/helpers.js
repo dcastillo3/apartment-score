@@ -1,7 +1,13 @@
 import { initialStates, localStorageSitePrefix } from './consts';
 
-const formatLocalStorageKey = localStorageKey => 
-    `${localStorageSitePrefix}-${localStorageKey}`;
+const camelCaseToKebabCase = string => string.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
+
+const formatLocalStorageKey = localStorageKey => {
+    const snakeCaseLocalStorageKey = camelCaseToKebabCase(localStorageKey);
+    const formattedLocalStorageKey = `${localStorageSitePrefix}-${snakeCaseLocalStorageKey}`;
+
+    return formattedLocalStorageKey;
+};
 
 const getStateFromLocalStorage = localStorageKey => {
     const initialState = initialStates[localStorageKey];
