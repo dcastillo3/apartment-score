@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { FlexBoxColumn, TextCaption, Textarea } from '../../styled';
+import { Box, FlexBoxColumn, TextCaption, Textarea } from '../../styled';
 
 const HiddenFormFieldContainer = styled(FlexBoxColumn)`
     display: none;
@@ -14,8 +14,13 @@ const UploadMessageText = styled(TextCaption)`
     text-align: center;
 `;
 
+const FormIconContainer = styled(Box)`
+    color: ${({theme}) => theme.palette.secondary.main};
+`;
+
 export {
     HiddenFormFieldContainer,
     FormTextArea,
-    UploadMessageText
+    UploadMessageText,
+    FormIconContainer
 };

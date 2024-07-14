@@ -3,19 +3,20 @@ import { useMediaQuery } from '../../../hooks';
 import { cardProps } from '../../styled';
 import { SettingsContainer } from './settingStyledComponents';
 import { Form, Notification } from '../../common';
-import { updatePriorityRatings } from './settingForms';
+import { updatePriorityRatingsForm } from './settingForms';
 import { notificationProps } from 'components/common/notification/notificationConsts';
 import { successUpdateMessage, successUpdateNotificationLength } from './settingConsts';
-import { fillUpdateSettingsForm, formatSettingsData } from './settingUtils';
+import { fillUpdatePriorityRatingsForm, formatSettingsData } from './settingUtils';
 import { ApartmentContext, SettingsContext } from 'context';
 import _ from 'lodash';
 
 function Settings() {
     const { handleUpdateAllApartments } = useContext(ApartmentContext);
-    const { settings, handleUpdateSettings } = useContext(SettingsContext);
+    const { scoreSettings, noteSettings, handleUpdateScoreSettings, handleUpdateNoteSettings } = useContext(SettingsContext);
     const [successNotification, setSuccessNotification] = useState(false);
-    const filledUpdateSettingsForm = !_.isEmpty(settings) ? fillUpdateSettingsForm(settings, updatePriorityRatings) : updatePriorityRatings;
     const { isDesktop } = useMediaQuery();
+    
+    const filledUpdatePriorityRatingsForm = (!_.isEmpty(scoreSettings) || !_.isEmpty(noteSettings)) ? fillUpdatePriorityRatingsForm(scoreSettings, noteSettings, updatePriorityRatingsForm) : updatePriorityRatingsForm;
     const settingsContainerPadding = isDesktop ? [5, 8] : [2];
     
     const handleHideNotifiction = () => {
@@ -23,11 +24,16 @@ function Settings() {
     };
 
     const handleSubmitUpdateSettings = settingsData => {
-        const formattedSettingsData = formatSettingsData(settingsData);
+        const { 
+            noteSettings: newNoteSettings, 
+            scoreSettings: newScoreSettings 
+        } = formatSettingsData(settingsData);
 
-        handleUpdateSettings(formattedSettingsData);
+        handleUpdateScoreSettings(newScoreSettings);
 
-        handleUpdateAllApartments(formattedSettingsData);
+        handleUpdateNoteSettings(newNoteSettings);
+
+        handleUpdateAllApartments(newScoreSettings);
 
         setSuccessNotification(true);
     };
@@ -46,7 +52,7 @@ function Settings() {
             {renderSuccessNotification}
             
             <Form
-                formParams={filledUpdateSettingsForm}
+                formParams={filledUpdatePriorityRatingsForm}
                 handleSubmit={handleSubmitUpdateSettings}
             />
         </SettingsContainer>

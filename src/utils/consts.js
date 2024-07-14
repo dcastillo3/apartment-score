@@ -8,7 +8,8 @@ const localStorageSitePrefix = 'apartment-score';
 
 const localStorageKeys = {
     apartments: 'apartments',
-    settings: 'settings',
+    scoreSettings: 'scoreSettings',
+    noteSettings: 'noteSettings'
 };
 
 // Define sort orders
@@ -24,7 +25,8 @@ const initialStates = {
     sortCategory: totalScore,
     order: orders.desc,
     apartments: [],
-    settings: [],
+    scoreSettings: [],
+    noteSettings: [],
     search: '',
 };
 
@@ -94,6 +96,9 @@ const defaultRoomOption = 1;
 
 const prevWeightedScoreType = 'object';
 
+// Define category notes suffix
+const Notes = 'Notes';
+
 export {
     apis,
     totalScore,
@@ -108,5 +113,6 @@ export {
     defaultScoreOption,
     defaultRoomOption,
     prevWeightedScoreType,
-    excludedListItemCategories
+    excludedListItemCategories,
+    Notes
 };

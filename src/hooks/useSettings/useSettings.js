@@ -1,30 +1,46 @@
 import { useEffect, useState } from "react";
 import { localStorageKeys } from "utils/consts";
 import { getStateFromLocalStorage, setLocalStorageState } from "utils/helpers";
-import { generateDefaultSettings } from "./useSettingsUtils";
+import { generateDefaultNoteSettings, generateDefaultScoreSettings, generateDefaultSettings } from "./useSettingsUtils";
 
 function useSettings() {
-    const [settings, setSettings] = useState(() => getStateFromLocalStorage(localStorageKeys.settings));
+    const [scoreSettings, setScoreSettings] = useState(() => getStateFromLocalStorage(localStorageKeys.scoreSettings));
+    const [noteSettings, setNoteSettings] = useState(() => getStateFromLocalStorage(localStorageKeys.noteSettings));
     
-    const handleUpdateSettings = newSettings => {
+    const handleUpdateScoreSettings = newSettings => {
         // Persist settings in local storage
-        setLocalStorageState(localStorageKeys.settings, newSettings);
+        setLocalStorageState(localStorageKeys.scoreSettings, newSettings);
 
-        setSettings(newSettings);
+        setScoreSettings(newSettings);
+    };
+
+    const handleUpdateNoteSettings = newNoteSettings => {
+        // Persist note settings in local storage
+        setLocalStorageState(localStorageKeys.noteSettings, newNoteSettings);
+
+        setNoteSettings(newNoteSettings);
     };
 
     // If no apartment settings are found in local storage, generate default settings
     useEffect(() => {
-        if (!settings.length) {
-            const defaultSettings = generateDefaultSettings();
+        if (!scoreSettings.length) {
+            const defaultScoreSettings = generateDefaultScoreSettings();
 
-            handleUpdateSettings(defaultSettings);
+            handleUpdateScoreSettings(defaultScoreSettings);
         };
+
+        if(!noteSettings.length) {
+            const defaultNoteSettings = generateDefaultNoteSettings();
+
+            handleUpdateNoteSettings(defaultNoteSettings);
+        }
     }, []);
 
     return {
-        settings,
-        handleUpdateSettings
+        scoreSettings,
+        noteSettings,
+        handleUpdateScoreSettings,
+        handleUpdateNoteSettings
     };
 };
 

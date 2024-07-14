@@ -3,8 +3,8 @@ import { checkPrevWeightedScore, checkSortableCategory, generateUniqueId } from 
 const buildTotalScore = weightedScores => Object.keys(weightedScores)
 .reduce((acc, key) => acc + parseInt(weightedScores[key].weightedScore), 0);
 
-const buildWeightedScores = (apartment, settings) => settings.reduce((acc, setting) => {
-    const category = setting.id;
+const buildWeightedScores = (apartment, scoreSettings) => scoreSettings.reduce((acc, scoreSetting) => {
+    const category = scoreSetting.id;
     let score = apartment[category];
     const prevWeightedScore = checkPrevWeightedScore(category, apartment);
     
@@ -12,7 +12,7 @@ const buildWeightedScores = (apartment, settings) => settings.reduce((acc, setti
     if (prevWeightedScore) score = score.score;
 
     const parsedScore = parseInt(score);
-    const weightedScore = parsedScore * setting.score;
+    const weightedScore = parsedScore * scoreSetting.score;
     return {
         ...acc,
         [category]: {
@@ -41,9 +41,9 @@ const formatApartmentData = (apartment) => {
     return formattedApartment;
 };
 
-const buildNewApartment = (apartment, settings) => {
+const buildNewApartment = (apartment, scoreSettings) => {
     const formattedApartment = formatApartmentData(apartment);
-    const newWeightedScores = buildWeightedScores(formattedApartment, settings);
+    const newWeightedScores = buildWeightedScores(formattedApartment, scoreSettings);
     const newTotalScore = buildTotalScore(newWeightedScores);
     const newApartment = {
         ...formattedApartment,

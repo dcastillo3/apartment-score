@@ -1,16 +1,27 @@
 import { defaultScoreOption } from "utils/consts";
-import { getInputScoreCategories } from "utils/reactUtils";
+import { buildCategoryNoteId, getInputScoreCategories } from "utils/reactUtils";
 
-const generateDefaultSettings = () => {
+const generateDefaultScoreSettings = () => {
     const scoreCategories = getInputScoreCategories();
-    const defaultSettings = scoreCategories.map(category => ({
+    const defaultScoreSettings = scoreCategories.map(category => ({
         id: category,
         score: defaultScoreOption
     }));
 
-    return defaultSettings;
+    return defaultScoreSettings;
 };
 
+const generateDefaultNoteSettings = () => {
+    const scoreCategories = getInputScoreCategories();
+    const defaultNoteSettings = scoreCategories.map(category => ({
+        id: buildCategoryNoteId(category),
+        notes: ''
+    }));
+
+    return defaultNoteSettings;
+}
+
 export {
-    generateDefaultSettings
+    generateDefaultScoreSettings,
+    generateDefaultNoteSettings
 };
