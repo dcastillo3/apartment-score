@@ -8,7 +8,7 @@ function ApartmentListItemMapsLink({ address }) {
 
     return (
         <Anchor href={mapsUrl} target="_blank">
-            <TitleSmall>{address}</TitleSmall>
+            <TitleSmall $truncate={true}>{address}</TitleSmall>
         </Anchor>
     );
 };
