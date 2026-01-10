@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Card, FlexBox, Image } from '../styled';
 
-const ApartmentListItemDetailsContainer = styled(FlexBox)`
+const ApartmentListItemFlexBoxContainer = styled(FlexBox)`
     justify-content: space-between;
 `;
 
@@ -22,8 +22,13 @@ const ApartmentListItemContainer = styled(Card)`
     `}
 `;
 
+const ApartmentListItemFlexBoxRightContainer = styled(FlexBox)`
+    justify-content: flex-end;
+`;
+
 export {
-    ApartmentListItemDetailsContainer,
+    ApartmentListItemFlexBoxContainer,
     ApartmentListItemImage,
-    ApartmentListItemContainer
+    ApartmentListItemContainer,
+    ApartmentListItemFlexBoxRightContainer
 };

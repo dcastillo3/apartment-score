@@ -71,6 +71,7 @@ function ApartmentListItem({
                     bedrooms={apartment.bedrooms}
                     bathrooms={apartment.bathrooms}
                     price={apartment.price}
+                    expenses={apartment.expenses}
                 />
 
                 <BarChart
