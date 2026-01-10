@@ -53,7 +53,6 @@ const categories = {
         'amenity',
         'community',
         'outdoorSpace',
-        'safety',
         'privacy',
         'size',
         'layout',
