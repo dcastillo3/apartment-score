@@ -44,6 +44,7 @@ const initialStates = {
 const categories = {
     sortableNonScoreCategories: [
         'price',
+        'expenses',
         'bedrooms',
         'bathrooms',
     ],

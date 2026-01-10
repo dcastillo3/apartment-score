@@ -16,13 +16,24 @@ const buildApartmentNonScoreSortableCategoryInputs = () => {
             fullRow: false
         };
 
-        // Build input type for price category
+        // Build input type for price and expenses categories
         if(category === 'price') {
             categoryInput.inputType = 'number';
             categoryInput.defaultValue = '';
             categoryInput.options = [];
             categoryInput.additionalProps = {
-                required: true
+                required: true,
+                min: 0
+            };
+        };
+
+        if(category === 'expenses') {
+            categoryInput.inputType = 'number';
+            categoryInput.defaultValue = 0;
+            categoryInput.options = [];
+            categoryInput.additionalProps = {
+                required: false,
+                min: 0
             };
         };
 
