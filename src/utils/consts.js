@@ -50,6 +50,9 @@ const categories = {
     scoreCategories: [
         'walk',
         'amenity',
+        'community',
+        'outdoorSpace',
+        'safety',
         'privacy',
         'size',
         'layout',
