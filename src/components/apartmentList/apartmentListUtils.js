@@ -1,17 +1,23 @@
 import { categories, scoreRange } from "utils/consts";
-import { buildCategoryLabel, getApartmentListItemCategories } from "utils/reactUtils";
+import { buildCategoryLabel, getApartmentListItemCategories, getCategoryFromNoteId } from "utils/reactUtils";
 
-const fillApartmentListItemForm = (apartment, updateApartmentForm) => {
+const fillApartmentListItemForm = (noteSettings, apartment, updateApartmentForm) => {
     const filledInputs = updateApartmentForm?.inputs?.map(formField => {
         const inputId = formField.id;
         const inputValue = apartment[inputId];
         const isScoreInput = categories.scoreCategories.includes(inputId);
         const defaultValue = isScoreInput ? inputValue.score : inputValue;
-
-        return {
+        // Separate `Notes` from Find note setting id that matches form field id
+        const noteSetting = noteSettings.find(noteSetting => getCategoryFromNoteId(noteSetting.id) === inputId);
+        const newFormField = { 
             ...formField,
             defaultValue
         };
+
+        //Populate tooltip with saved user note
+        if(!_.isEmpty(noteSetting)) newFormField.tooltip = noteSetting.notes;
+
+        return newFormField;
     });
 
     const filledUpdateApartmentForm = {

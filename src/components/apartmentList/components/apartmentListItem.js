@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Anchor, Box, Card, FlexBoxColumn, cardProps } from '../../styled';
 import { updateApartmentForm } from '../../main/apartment/apartmentForms';
 import { BarChart, Form, Overlay, overlayProps } from '../../common';
 import { fillApartmentListItemForm, formatApartmentListItemChartData } from '../apartmentListUtils';
 import { ApartmentListItemContainer, ApartmentListItemImage } from '../apartmentListStyledComponents';
 import { useMediaQuery } from '../../../hooks';
+import { SettingsContext } from 'context';
 import { apartmentListItemCategoryPadding } from '../apartmentListConsts';
 import ApartmentListItemMapsLink from './apartmentListItemMapsLink';
 import ApartmentListItemDetails from './apartmentListItemDetails';
@@ -21,7 +22,8 @@ function ApartmentListItem({
 }) {
     const { isDesktop } = useMediaQuery();
     const [showUpdateForm, setShowUpdateForm] = useState(false);
-    const filledApartmentForm = fillApartmentListItemForm(apartment, updateApartmentForm);
+    const { noteSettings } = useContext(SettingsContext);
+    const filledApartmentForm = fillApartmentListItemForm(noteSettings, apartment, updateApartmentForm);
     const { listItemChartData, listItemChartRange } = formatApartmentListItemChartData(apartment);
 
     const handleUpdateClick = apartmentData => {
