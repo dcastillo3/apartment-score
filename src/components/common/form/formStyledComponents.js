@@ -16,6 +16,11 @@ const UploadMessageText = styled(TextCaption)`
 
 const FormIconContainer = styled(Box)`
     color: ${({theme}) => theme.palette.secondary.main};
+
+    // Adjust the font size of the nested SVG
+    & svg {
+        font-size: ${({theme}) => theme.typography.body2.fontSize};
+    }
 `;
 
 export {
