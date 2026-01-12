@@ -109,8 +109,19 @@ const formatSettingsData = settingsData => {
     return formattedSettingsData;
 };
 
+// Generates a unique key for the form component
+// Combines current timestamp with settings data to ensure form remounts when needed
+const generateFormKey = (scoreSettings, noteSettings) => {
+    const timestamp = Date.now().toString();
+    const settingsData = JSON.stringify(scoreSettings) + JSON.stringify(noteSettings);
+    const formKey = timestamp + settingsData;
+    
+    return formKey;
+};
+
 export {
     buildSettingsScoreCategoryInputs,
     fillUpdatePriorityRatingsForm,
-    formatSettingsData
+    formatSettingsData,
+    generateFormKey
 };

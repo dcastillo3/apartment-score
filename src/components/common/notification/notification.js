@@ -4,7 +4,7 @@ import { FlexBox, TextSmall } from 'components/styled';
 
 function Notification({message, variant, handleHideNotifiction, notificationLength}) {
     useEffect(() => {
-        const timeoutMs = notificationLength || 3000;
+        const timeoutMs = notificationLength || 10000;
         const successTimeout = setTimeout(() => {
             handleHideNotifiction();
         }, timeoutMs);

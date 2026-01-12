@@ -68,13 +68,21 @@ function useApartments() {
         setApartments(sortedApartments);
     };
 
+    const handleImportApartments = importedApartments => {
+        // Persist apartments in local storage
+        setLocalStorageState(localStorageKeys.apartments, importedApartments);
+
+        setApartments(importedApartments);
+    };
+
     return {
         apartments,
         handleAddApartment,
         handleUpdateApartment,
         handleUpdateAllApartments,
         handleDeleteApartment,
-        handleSortApartments
+        handleSortApartments,
+        handleImportApartments
     };
 };
 

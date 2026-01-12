@@ -3,10 +3,11 @@ import { useMediaQuery } from '../../../hooks';
 import { cardProps } from '../../styled';
 import { SettingsContainer } from './settingStyledComponents';
 import { Form, Notification } from '../../common';
+import { DataManagement } from '../../dataManagement';
 import { updatePriorityRatingsForm } from './settingForms';
 import { notificationProps } from 'components/common/notification/notificationConsts';
-import { successUpdateMessage, successUpdateNotificationLength } from './settingConsts';
-import { fillUpdatePriorityRatingsForm, formatSettingsData } from './settingUtils';
+import { successUpdateMessage } from './settingConsts';
+import { fillUpdatePriorityRatingsForm, formatSettingsData, generateFormKey } from './settingUtils';
 import { ApartmentContext, SettingsContext } from 'context';
 import _ from 'lodash';
 
@@ -18,6 +19,9 @@ function Settings() {
     
     const filledUpdatePriorityRatingsForm = (!_.isEmpty(scoreSettings) || !_.isEmpty(noteSettings)) ? fillUpdatePriorityRatingsForm(scoreSettings, noteSettings, updatePriorityRatingsForm) : updatePriorityRatingsForm;
     const settingsContainerPadding = isDesktop ? [5, 8] : [2];
+    // Creates a unique key from settings data to tell React when to refresh the form
+    // When settings change (from import or context update), the key changes and Form remounts with new values
+    const formKey = generateFormKey(scoreSettings, noteSettings);
     
     const handleHideNotifiction = () => {
         setSuccessNotification(false);
@@ -43,7 +47,6 @@ function Settings() {
             message={successUpdateMessage}
             variant={notificationProps.variant.success}
             handleHideNotifiction={handleHideNotifiction}
-            notificationLength={successUpdateNotificationLength}
         />
     );
 
@@ -51,7 +54,10 @@ function Settings() {
         <SettingsContainer $variant={cardProps.variant.background} $p={settingsContainerPadding}>
             {renderSuccessNotification}
             
+            <DataManagement />
+            
             <Form
+                key={formKey}
                 formParams={filledUpdatePriorityRatingsForm}
                 handleSubmit={handleSubmitUpdateSettings}
             />
