@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { menuRoutes } from '../../routes/routesConsts';
 import { MobileMenuContainer, MenuIcon as MenuIconStyled, MobileMenuItemsContainer, MobileMenuItemContainer } from './menuStyledComponents';
 import MenuItem from './menuItem';
+import { UserMenu } from '../userMenu';
 import { FlexBoxColumn, SemanticButton, cardProps } from '../styled';
 import MenuIcon from '@mui/icons-material/Menu';
 import { ClickAwayListener } from '@mui/material';
@@ -24,6 +25,9 @@ function MobileMenu() {
             <MobileMenuItemsContainer $variant={cardProps.variant.info}>
                 <FlexBoxColumn>
                     {menuItems}
+                    <MobileMenuItemContainer $p={[4, 0]} $m={[0, 4]} $borderVariant={'backgroundLight'}>
+                        <UserMenu />
+                    </MobileMenuItemContainer>
                 </FlexBoxColumn>
             </MobileMenuItemsContainer>
         </ClickAwayListener>

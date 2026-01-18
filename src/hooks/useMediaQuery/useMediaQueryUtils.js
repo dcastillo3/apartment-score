@@ -1,4 +1,4 @@
-import { minDesktopWidth, minTabletWidth } from "./useMediaQueryConsts";
+import { minDesktopWidth, minTabletWidth, intialWindowWidth } from "./useMediaQueryConsts";
 
 const getIsDesktop = currWindowWidth => currWindowWidth > minDesktopWidth
 
@@ -6,8 +6,29 @@ const getIsTablet = currWindowWidth => !getIsDesktop(currWindowWidth) && currWin
 
 const getIsMobile = currWindowWidth => currWindowWidth < minTabletWidth;
 
+const getInitialIsMobile = () => {
+    const initialIsMobile = getIsMobile(intialWindowWidth);
+    
+    return initialIsMobile;
+};
+
+const getInitialIsTablet = () => {
+    const initialIsTablet = getIsTablet(intialWindowWidth);
+    
+    return initialIsTablet;
+};
+
+const getInitialIsDesktop = () => {
+    const initialIsDesktop = getIsDesktop(intialWindowWidth);
+    
+    return initialIsDesktop;
+};
+
 export {
     getIsDesktop,
     getIsTablet,
-    getIsMobile
+    getIsMobile,
+    getInitialIsMobile,
+    getInitialIsTablet,
+    getInitialIsDesktop
 };

@@ -2,6 +2,14 @@ const apiDirectory = '/api';
 
 const apis = {
     data: `${apiDirectory}/data`,
+    auth: {
+        current: `${apiDirectory}/auth/current`,
+        logout: `${apiDirectory}/auth/logout`,
+        google: `${apiDirectory}/auth/google`
+    },
+    user: {
+        data: `${apiDirectory}/user/data`
+    }
 };
 
 const localStorageSitePrefix = 'apartment-score';
@@ -28,6 +36,11 @@ const initialStates = {
     scoreSettings: [],
     noteSettings: [],
     search: '',
+    auth: {
+        user: null,
+        isAuthenticated: false,
+        isLoading: true
+    }
 };
 
 // TO-DO: Build amenity filter categories

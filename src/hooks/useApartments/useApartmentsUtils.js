@@ -1,4 +1,6 @@
 import { checkPrevWeightedScore, checkSortableCategory, generateUniqueId } from "utils/reactUtils";
+import { getStateFromLocalStorage } from "utils/helpers";
+import { localStorageKeys } from "utils/consts";
 
 const buildTotalScore = weightedScores => Object.keys(weightedScores)
 .reduce((acc, key) => acc + parseInt(weightedScores[key].weightedScore), 0);
@@ -57,6 +59,13 @@ const buildNewApartment = (apartment, scoreSettings) => {
     return newApartment;
 };
 
+const getInitialApartments = () => {
+    const storedApartments = getStateFromLocalStorage(localStorageKeys.apartments);
+    
+    return storedApartments;
+};
+
 export {
-    buildNewApartment
+    buildNewApartment,
+    getInitialApartments
 }

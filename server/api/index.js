@@ -1,12 +1,18 @@
 const router = require('express').Router();
+const { errorMessages } = require('../utils/consts');
 
-//Data route
-router.use('/data', require('./data/data'));
+//Auth route
+router.use('/auth', require('./auth/auth'));
+
+//User route
+router.use('/user', require('./user/user'));
 
 router.use((req, res, next) => {
-    const error = new Error('Not Found');
-    
+    // Create error with custom status property
+    const error = new Error(errorMessages.notFound);
+
     error.status = 404;
+
     next(error);
 });
 

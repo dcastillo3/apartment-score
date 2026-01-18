@@ -1,6 +1,7 @@
 import React from 'react';
 import { menuRoutes } from '../../routes/routesConsts';
 import MenuItem from './menuItem';
+import { UserMenu } from '../userMenu';
 import { MenuContainer } from './menuStyledComponents';
 
 function Menu() {
@@ -11,6 +12,7 @@ function Menu() {
     return (
         <MenuContainer>
             {renderMenuItems}
+            <UserMenu />
         </MenuContainer>
     );
 };

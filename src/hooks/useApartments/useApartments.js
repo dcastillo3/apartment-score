@@ -1,51 +1,67 @@
-import { useState } from 'react';
-import { localStorageKeys, orders } from 'utils/consts';
-import { getStateFromLocalStorage, setLocalStorageState } from 'utils/helpers';
-import { buildNewApartment } from './useApartmentsUtils';
+import { useState, useContext } from 'react';
+import { localStorageKeys, orders, apis } from 'utils/consts';
+import { setLocalStorageState } from 'utils/helpers';
+import { buildNewApartment, getInitialApartments } from './useApartmentsUtils';
 import { checkScoreCategory } from 'utils/reactUtils';
+import { errorPrefixes } from './useApartmentsConsts';
+import { AuthContext } from 'context';
+import axios from 'axios';
 
 function useApartments() {
-    const [apartments, setApartments] = useState(() => getStateFromLocalStorage(localStorageKeys.apartments));
+    const { isAuthenticated } = useContext(AuthContext);
+    const [apartments, setApartments] = useState(getInitialApartments);
 
-    const handleAddApartment = (apartment, scoreSettings) => {
+    // Persist apartments to MongoDB (if authenticated) or localStorage (if not)
+    const persistApartments = async (newApartments) => {
+        if (isAuthenticated) {
+            try {
+                const axiosConfig = { withCredentials: true };
+                const apartmentsPayload = { apartments: newApartments };
+
+                await axios.put(apis.user.data, apartmentsPayload, axiosConfig);
+            } catch (err) {
+                console.error(errorPrefixes.saveFailed, err);
+            }
+        } else {
+            setLocalStorageState(localStorageKeys.apartments, newApartments);
+        }
+    };
+
+    const handleAddApartment = async (apartment, scoreSettings) => {
         const newApartment = buildNewApartment(apartment, scoreSettings);
         const newApartments = [newApartment, ...apartments];
 
-        // Persist apartments in local storage
-        setLocalStorageState(localStorageKeys.apartments, newApartments);
-
         setApartments(newApartments);
+
+        await persistApartments(newApartments);
     };
 
-    const handleUpdateApartment = (id, apartment, scoreSettings) => {
+    const handleUpdateApartment = async (id, apartment, scoreSettings) => {
         const newApartments = apartments.map(prevApartment =>
             prevApartment.id === id ? buildNewApartment(apartment, scoreSettings) : prevApartment
         );
 
-        // Persist apartments in local storage
-        setLocalStorageState(localStorageKeys.apartments, newApartments);
-
         setApartments(newApartments);
+
+        await persistApartments(newApartments);
     };
 
-    const handleUpdateAllApartments = scoreSettings => {
+    const handleUpdateAllApartments = async (scoreSettings) => {
         const newApartments = apartments.map(prevApartment => 
             buildNewApartment(prevApartment, scoreSettings)
         );
         
-        // Persist apartments in local storage
-        setLocalStorageState(localStorageKeys.apartments, newApartments);
-    
         setApartments(newApartments);
+
+        await persistApartments(newApartments);
     };
 
-    const handleDeleteApartment = id => {
+    const handleDeleteApartment = async (id) => {
         const newApartments = apartments.filter(apartment => apartment.id !== id);
 
-        // Persist apartments in local storage
-        setLocalStorageState(localStorageKeys.apartments, newApartments);
-
         setApartments(newApartments);
+
+        await persistApartments(newApartments);
     };
 
     const handleSortApartments = (category, order) => {
@@ -68,21 +84,39 @@ function useApartments() {
         setApartments(sortedApartments);
     };
 
-    const handleImportApartments = importedApartments => {
-        // Persist apartments in local storage
-        setLocalStorageState(localStorageKeys.apartments, importedApartments);
-
+    const handleImportApartments = async (importedApartments) => {
         setApartments(importedApartments);
+
+        await persistApartments(importedApartments);
+    };
+
+    const fetchApartments = async () => {
+        if (!isAuthenticated) return;
+        
+        try {
+            const axiosConfig = { withCredentials: true };
+            const res = await axios.get(apis.user.data, axiosConfig);
+
+            if (res?.data?.success) {
+                const { apartments = [] } = res.data.data;
+
+                setApartments(apartments);
+            }
+        } catch (err) {
+            console.error(errorPrefixes.fetchFailed, err);
+        }
     };
 
     return {
         apartments,
+        setApartments,
         handleAddApartment,
         handleUpdateApartment,
         handleUpdateAllApartments,
         handleDeleteApartment,
         handleSortApartments,
-        handleImportApartments
+        handleImportApartments,
+        fetchApartments
     };
 };
 
