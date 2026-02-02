@@ -1,7 +1,14 @@
 const serverless = require('serverless-http');
-const server = require('../../server');
+const app = require('../../server');
 
-// Create serverless function for express to work in Netlify production builds
-const netlifyHandler = serverless(server)
+// Wrap Express app with serverless-http
+const handler = serverless(app);
 
-module.exports.handler = netlifyHandler;
+module.exports.handler = async (event, context) => {
+    // Prevent Lambda from waiting for empty event loop
+    context.callbackWaitsForEmptyEventLoop = false;
+    
+    // Handle the request
+    const result = await handler(event, context);
+    return result;
+};
