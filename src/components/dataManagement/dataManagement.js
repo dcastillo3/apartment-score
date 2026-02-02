@@ -8,9 +8,12 @@ import { ApartmentContext, SettingsContext } from 'context';
 import { Heading, headingProps, Notification } from '../common';
 import { notificationProps } from '../common/notification/notificationConsts';
 
+// TODO: Add functionality to update user profile data (firstName, lastName, userName)
+// and change password for email/password authenticated users
+
 function DataManagement() {
     const { apartments, handleImportApartments } = useContext(ApartmentContext);
-    const { scoreSettings, noteSettings, handleUpdateScoreSettings, handleUpdateNoteSettings } = useContext(SettingsContext);
+    const { scoreSettings, noteSettings, handleUpdateSettings } = useContext(SettingsContext);
     const { isDesktop } = useMediaQuery();
     const [isImporting, setIsImporting] = useState(false);
     const [notification, setNotification] = useState(false);
@@ -50,8 +53,7 @@ function DataManagement() {
                 await importData(
                     file,
                     handleImportApartments,
-                    handleUpdateScoreSettings,
-                    handleUpdateNoteSettings
+                    handleUpdateSettings
                 );
 
                 const successImportNotification = {

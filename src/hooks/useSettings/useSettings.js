@@ -1,46 +1,66 @@
-import { useEffect, useState } from "react";
-import { localStorageKeys } from "utils/consts";
-import { getStateFromLocalStorage, setLocalStorageState } from "utils/helpers";
-import { generateDefaultNoteSettings, generateDefaultScoreSettings, generateDefaultSettings } from "./useSettingsUtils";
+import { useState, useContext } from "react";
+import { apis } from "utils/consts";
+import { generateDefaultScoreSettings, generateDefaultNoteSettings } from "./useSettingsUtils";
+import { errorPrefixes } from "./useSettingsConsts";
+import { AuthContext } from "context";
+import axios from "axios";
+import _ from "lodash";
 
 function useSettings() {
-    const [scoreSettings, setScoreSettings] = useState(() => getStateFromLocalStorage(localStorageKeys.scoreSettings));
-    const [noteSettings, setNoteSettings] = useState(() => getStateFromLocalStorage(localStorageKeys.noteSettings));
+    const { isAuthenticated } = useContext(AuthContext);
+    const [scoreSettings, setScoreSettings] = useState(generateDefaultScoreSettings);
+    const [noteSettings, setNoteSettings] = useState(generateDefaultNoteSettings);
     
-    const handleUpdateScoreSettings = newSettings => {
-        // Persist settings in local storage
-        setLocalStorageState(localStorageKeys.scoreSettings, newSettings);
-
-        setScoreSettings(newSettings);
-    };
-
-    const handleUpdateNoteSettings = newNoteSettings => {
-        // Persist note settings in local storage
-        setLocalStorageState(localStorageKeys.noteSettings, newNoteSettings);
-
-        setNoteSettings(newNoteSettings);
-    };
-
-    // If no apartment settings are found in local storage, generate default settings
-    useEffect(() => {
-        if (!scoreSettings.length) {
-            const defaultScoreSettings = generateDefaultScoreSettings();
-
-            handleUpdateScoreSettings(defaultScoreSettings);
-        };
-
-        if(!noteSettings.length) {
-            const defaultNoteSettings = generateDefaultNoteSettings();
-
-            handleUpdateNoteSettings(defaultNoteSettings);
+    // Persist settings to MongoDB
+    const persistSettings = async (settings) => {
+        if (isAuthenticated) {
+            try {
+                const axiosConfig = { withCredentials: true };
+                const settingsPayload = { settings };
+                
+                await axios.put(apis.user.data, settingsPayload, axiosConfig);
+            } catch (err) {
+                console.error(errorPrefixes.saveFailed, err);
+            }
         }
-    }, []);
+    };
+
+    const handleUpdateSettings = async (newScoreSettings, newNoteSettings) => {
+        setScoreSettings(newScoreSettings);
+        setNoteSettings(newNoteSettings);
+
+        await persistSettings({ score: newScoreSettings, note: newNoteSettings });
+    };
+
+    const fetchSettings = async () => {
+        if (!isAuthenticated) return;
+        
+        try {
+            const axiosConfig = { withCredentials: true };
+            const res = await axios.get(apis.user.data, axiosConfig);
+
+            if (res?.data?.success) {
+                const { settings } = res.data.data;
+                
+                if (_.isEmpty(settings)) {
+                    // New user - initialize with defaults and persist to MongoDB
+                    await handleUpdateSettings(scoreSettings, noteSettings);
+                } else {
+                    // Existing user - use fetched settings
+                    setScoreSettings(settings.score);
+                    setNoteSettings(settings.note);
+                }
+            }
+        } catch (err) {
+            console.error(errorPrefixes.fetchFailed, err);
+        }
+    };
 
     return {
         scoreSettings,
         noteSettings,
-        handleUpdateScoreSettings,
-        handleUpdateNoteSettings
+        handleUpdateSettings,
+        fetchSettings
     };
 };
 

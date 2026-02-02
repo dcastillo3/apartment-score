@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { intialWindowWidth, useMediaQueryEvent } from "./useMediaQueryConsts";
-import { getIsDesktop, getIsMobile, getIsTablet } from "./useMediaQueryUtils";
+import { getIsDesktop, getIsMobile, getIsTablet, getInitialIsMobile, getInitialIsTablet, getInitialIsDesktop } from "./useMediaQueryUtils";
 
 const useMediaQuery = () => {
     const [windowWidth, setWindowWidth] = useState(intialWindowWidth);
-    const [isMobile, setIsMobile] = useState(() => getIsMobile(intialWindowWidth));
-    const [isTablet, setIsTablet] = useState(() => getIsTablet(intialWindowWidth));
-    const [isDesktop, setIsDesktop] = useState(() => getIsDesktop(intialWindowWidth));
+    const [isMobile, setIsMobile] = useState(getInitialIsMobile);
+    const [isTablet, setIsTablet] = useState(getInitialIsTablet);
+    const [isDesktop, setIsDesktop] = useState(getInitialIsDesktop);
 
     useEffect(() => {
         const handleResizeWindow = () => {

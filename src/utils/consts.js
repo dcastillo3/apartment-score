@@ -2,14 +2,16 @@ const apiDirectory = '/api';
 
 const apis = {
     data: `${apiDirectory}/data`,
-};
-
-const localStorageSitePrefix = 'apartment-score';
-
-const localStorageKeys = {
-    apartments: 'apartments',
-    scoreSettings: 'scoreSettings',
-    noteSettings: 'noteSettings'
+    auth: {
+        current: `${apiDirectory}/auth/current`,
+        logout: `${apiDirectory}/auth/logout`,
+        google: `${apiDirectory}/auth/google`,
+        signup: `${apiDirectory}/auth/signup`,
+        login: `${apiDirectory}/auth/login`
+    },
+    user: {
+        data: `${apiDirectory}/user/data`
+    }
 };
 
 // Define sort orders
@@ -28,6 +30,11 @@ const initialStates = {
     scoreSettings: [],
     noteSettings: [],
     search: '',
+    auth: {
+        user: null,
+        isAuthenticated: false,
+        isLoading: true
+    }
 };
 
 // TO-DO: Build amenity filter categories
@@ -106,8 +113,6 @@ export {
     apis,
     totalScore,
     initialStates,
-    localStorageSitePrefix,
-    localStorageKeys,
     orders,
     categories,
     excludedInputCategories,

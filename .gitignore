@@ -4,3 +4,8 @@ build
 .env
 # Local Netlify folder
 .netlify
+
+# Internal documentation
+ARCHITECTURE.md
+OAUTH_SETUP.md
+SECURITY_VALIDATION.md

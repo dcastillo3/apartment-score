@@ -14,6 +14,27 @@ const successExportMessage = 'Data exported successfully!';
 const successImportMessage = 'Data imported successfully!';
 const errorImportMessage = 'Failed to import data. Please check the file and try again.';
 
+// Validation error messages
+const validationErrors = {
+    invalidStructure: 'Invalid data structure. File must contain apartments, scoreSettings, and noteSettings.',
+    invalidApartments: 'Invalid apartments data. Must be an array.',
+    invalidScoreSettings: 'Invalid score settings. Must be an array of objects with id and score.',
+    invalidNoteSettings: 'Invalid note settings. Must be an array of objects with id and notes.',
+    apartmentMissingFields: 'Apartment is missing required fields (id, address, etc).',
+    invalidScoreValue: 'Score values must be numbers between 0 and 5.',
+    fileTooLarge: 'File size exceeds maximum allowed (5MB).',
+    tooManyApartments: 'Too many apartments (maximum 1000).'
+};
+
+// Validation limits
+const validationLimits = {
+    maxFileSize: 5 * 1024 * 1024, // 5MB
+    maxApartments: 1000,
+    maxStringLength: 1000,
+    minScore: 0,
+    maxScore: 5
+};
+
 export {
     dataManagementHeading,
     exportButtonLabel,
@@ -29,5 +50,7 @@ export {
     anchorElementType,
     successExportMessage,
     successImportMessage,
-    errorImportMessage
+    errorImportMessage,
+    validationErrors,
+    validationLimits
 };

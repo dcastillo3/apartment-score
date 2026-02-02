@@ -1,25 +1,24 @@
 import React from 'react';
-import { useApartments, useData, useSettings } from '../hooks';
-import { DataContext, SettingsContext, ApartmentContext } from './';
+import { useAuth } from '../hooks';
+import { AuthContext } from './';
 import { theme } from '../theme';
 import { ThemeProvider } from 'styled-components';
 import { buildCustomTheme } from './contextUtils';
+import AuthDependentProviders from './components/authDependentProviders';
 
+// Root context provider that wraps the entire application
+// Provides auth context first, then nested providers that depend on it
 function AppContext({children}) {
-    const data = useData();
-    const apartments = useApartments();
-    const settings = useSettings();
+    const auth = useAuth();
     const customTheme = buildCustomTheme(theme);
-    
+
     return (
         <ThemeProvider theme={customTheme}>
-            <DataContext.Provider value={data}>
-                <ApartmentContext.Provider value={apartments}>
-                    <SettingsContext.Provider value={settings}>
-                        {children}
-                    </SettingsContext.Provider>
-                </ApartmentContext.Provider>
-            </DataContext.Provider>
+            <AuthContext.Provider value={auth}>
+                <AuthDependentProviders>
+                    {children}
+                </AuthDependentProviders>
+            </AuthContext.Provider>
         </ThemeProvider>
     );
 };
