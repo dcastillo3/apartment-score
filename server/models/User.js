@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const UserSchema = new mongoose.Schema({
     googleId: {
         type: String,
-        required: true,
         unique: true,
+        sparse: true,
         index: true
     },
     email: {
@@ -15,11 +15,14 @@ const UserSchema = new mongoose.Schema({
         trim: true
     },
     password: {
-        type: String
+        type: String,
+        select: false
     },
     userName: {
         type: String,
-        trim: true
+        required: true,
+        trim: true,
+        unique: true
     },
     firstName: {
         type: String,
@@ -30,14 +33,8 @@ const UserSchema = new mongoose.Schema({
         trim: true
     },
     settings: {
-        score: {
-            type: mongoose.Schema.Types.Mixed,
-            default: {}
-        },
-        note: {
-            type: mongoose.Schema.Types.Mixed,
-            default: {}
-        }
+        type: mongoose.Schema.Types.Mixed,
+        default: {}
     },
     apartments: {
         type: [mongoose.Schema.Types.Mixed],
@@ -58,7 +55,7 @@ const UserSchema = new mongoose.Schema({
 // Update last login on each authentication
 UserSchema.methods.updateLastLogin = function() {
     this.lastLogin = Date.now();
-    
+
     return this.save();
 };
 

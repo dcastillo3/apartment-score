@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import { Card } from "../../styled";
 
-const BiographyContainer = styled(Card)`
+const AboutContainer = styled(Card)`
 `;
 
 export {
-    BiographyContainer
+    AboutContainer
 };

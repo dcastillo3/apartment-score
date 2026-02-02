@@ -5,6 +5,8 @@ import { Footer } from './components/footer';
 import { AuthContext, ApartmentContext, SettingsContext } from './context';
 import { Box } from './components/styled';
 
+// TODO: Implement comprehensive testing suite (unit tests, integration tests, E2E tests)
+
 function App() {
     const { isAuthenticated, fetchAuth } = useContext(AuthContext);
     const { fetchApartments } = useContext(ApartmentContext);

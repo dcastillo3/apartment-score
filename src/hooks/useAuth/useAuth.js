@@ -27,7 +27,7 @@ function useAuth() {
             }
         } catch (err) {
             setUser(null);
-            
+
             setIsAuthenticated(false);
             
             // Don't log 401 errors as they're expected for non-authenticated users
@@ -38,8 +38,60 @@ function useAuth() {
     };
 
     // Redirect to Google OAuth flow
-    const login = () => {
+    const loginWithGoogle = () => {
         window.location.href = apis.auth.google;
+    };
+
+    // Login with email and password
+    const login = async (email, password) => {
+        try {
+            const axiosConfig = { withCredentials: true };
+            const requestData = { email, password };
+            const res = await axios.post(apis.auth.login, requestData, axiosConfig);
+
+            if (res?.data?.success) {
+                const userData = buildUserData(res.data.data.user);
+
+                setUser(userData);
+                setIsAuthenticated(true);
+
+                return { success: true };
+            } else {
+                return { success: false, error: res.data.err };
+            }
+        } catch (err) {
+            const errorMessage = err?.response?.data?.err || 'Login failed';
+            
+            console.error(errorPrefixes.login, err);
+
+            return { success: false, error: errorMessage };
+        }
+    };
+
+    // Sign up with email and password
+    const signup = async (email, password, firstName, lastName, userName) => {
+        try {
+            const axiosConfig = { withCredentials: true };
+            const requestData = { email, password, firstName, lastName, userName };
+            const res = await axios.post(apis.auth.signup, requestData, axiosConfig);
+
+            if (res?.data?.success) {
+                const userData = buildUserData(res.data.data.user);
+
+                setUser(userData);
+                setIsAuthenticated(true);
+
+                return { success: true };
+            } else {
+                return { success: false, error: res.data.err };
+            }
+        } catch (err) {
+            const errorMessage = err?.response?.data?.err || 'Signup failed';
+            
+            console.error(errorPrefixes.signup, err);
+
+            return { success: false, error: errorMessage };
+        }
     };
 
     // Log out user and clear their data
@@ -61,7 +113,9 @@ function useAuth() {
     return {
         user,
         isAuthenticated,
+        loginWithGoogle,
         login,
+        signup,
         logout,
         fetchAuth
     };

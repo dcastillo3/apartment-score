@@ -5,19 +5,13 @@ const apis = {
     auth: {
         current: `${apiDirectory}/auth/current`,
         logout: `${apiDirectory}/auth/logout`,
-        google: `${apiDirectory}/auth/google`
+        google: `${apiDirectory}/auth/google`,
+        signup: `${apiDirectory}/auth/signup`,
+        login: `${apiDirectory}/auth/login`
     },
     user: {
         data: `${apiDirectory}/user/data`
     }
-};
-
-const localStorageSitePrefix = 'apartment-score';
-
-const localStorageKeys = {
-    apartments: 'apartments',
-    scoreSettings: 'scoreSettings',
-    noteSettings: 'noteSettings'
 };
 
 // Define sort orders
@@ -119,8 +113,6 @@ export {
     apis,
     totalScore,
     initialStates,
-    localStorageSitePrefix,
-    localStorageKeys,
     orders,
     categories,
     excludedInputCategories,

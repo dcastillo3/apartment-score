@@ -2,7 +2,10 @@ const errorMessages = {
     unauthorized: 'Unauthorized',
     userNotFound: 'User not found',
     fetchFailed: 'Failed to fetch user data',
-    saveFailed: 'Failed to save user data'
+    saveFailed: 'Failed to save user data',
+    invalidInputType: 'Invalid input type',
+    invalidApartmentsStructure: 'Invalid apartments data structure',
+    invalidSettingsStructure: 'Invalid settings data structure'
 };
 
 const successMessages = {

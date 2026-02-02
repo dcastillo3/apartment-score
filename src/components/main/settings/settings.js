@@ -13,7 +13,7 @@ import _ from 'lodash';
 
 function Settings() {
     const { handleUpdateAllApartments } = useContext(ApartmentContext);
-    const { scoreSettings, noteSettings, handleUpdateScoreSettings, handleUpdateNoteSettings } = useContext(SettingsContext);
+    const { scoreSettings, noteSettings, handleUpdateSettings } = useContext(SettingsContext);
     const [successNotification, setSuccessNotification] = useState(false);
     const { isDesktop } = useMediaQuery();
     
@@ -33,9 +33,7 @@ function Settings() {
             scoreSettings: newScoreSettings 
         } = formatSettingsData(settingsData);
 
-        handleUpdateScoreSettings(newScoreSettings);
-
-        handleUpdateNoteSettings(newNoteSettings);
+        handleUpdateSettings(newScoreSettings, newNoteSettings);
 
         handleUpdateAllApartments(newScoreSettings);
 

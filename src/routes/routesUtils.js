@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { initialDocumentTitle, generalRoutes, menuRoutes, protectedRoutes, notFoundRoute } from "./routesConsts";
+import { initialDocumentTitle, generalRoutes, menuRoutes, authenticatedRoutes, unauthenticatedRoutes, notFoundRoute } from "./routesConsts";
 
 const getRouteById = id => {
     const menuRoute = menuRoutes.find(route => route.id === id);
@@ -8,8 +8,11 @@ const getRouteById = id => {
     const generalRoute = generalRoutes.find(route => route.id === id);
     if (!_.isEmpty(generalRoute)) return generalRoute;
 
-    const protectedRoute = protectedRoutes.find(route => route.id === id);
-    if (!_.isEmpty(protectedRoute)) return protectedRoute;
+    const authenticatedRoute = authenticatedRoutes.find(route => route.id === id);
+    if (!_.isEmpty(authenticatedRoute)) return authenticatedRoute;
+
+    const unauthenticatedRoute = unauthenticatedRoutes.find(route => route.id === id);
+    if (!_.isEmpty(unauthenticatedRoute)) return unauthenticatedRoute;
 
     return notFoundRoute;
 };
@@ -21,8 +24,11 @@ const getRouteByPathname = pathname => {
     const generalRoute = generalRoutes.find(route => route.path === pathname);
     if (!_.isEmpty(generalRoute)) return generalRoute;
 
-    const protectedRoute = protectedRoutes.find(route => route.path === pathname);
-    if (!_.isEmpty(protectedRoute)) return protectedRoute;
+    const authenticatedRoute = authenticatedRoutes.find(route => route.path === pathname);
+    if (!_.isEmpty(authenticatedRoute)) return authenticatedRoute;
+
+    const unauthenticatedRoute = unauthenticatedRoutes.find(route => route.path === pathname);
+    if (!_.isEmpty(unauthenticatedRoute)) return unauthenticatedRoute;
 
     return notFoundRoute;
 };

@@ -1,7 +1,6 @@
 import { useState, useContext } from 'react';
-import { localStorageKeys, orders, apis } from 'utils/consts';
-import { setLocalStorageState } from 'utils/helpers';
-import { buildNewApartment, getInitialApartments } from './useApartmentsUtils';
+import { orders, apis, initialStates } from 'utils/consts';
+import { buildNewApartment } from './useApartmentsUtils';
 import { checkScoreCategory } from 'utils/reactUtils';
 import { errorPrefixes } from './useApartmentsConsts';
 import { AuthContext } from 'context';
@@ -9,9 +8,9 @@ import axios from 'axios';
 
 function useApartments() {
     const { isAuthenticated } = useContext(AuthContext);
-    const [apartments, setApartments] = useState(getInitialApartments);
+    const [apartments, setApartments] = useState(initialStates.apartments);
 
-    // Persist apartments to MongoDB (if authenticated) or localStorage (if not)
+    // Persist apartments to MongoDB
     const persistApartments = async (newApartments) => {
         if (isAuthenticated) {
             try {
@@ -22,8 +21,6 @@ function useApartments() {
             } catch (err) {
                 console.error(errorPrefixes.saveFailed, err);
             }
-        } else {
-            setLocalStorageState(localStorageKeys.apartments, newApartments);
         }
     };
 

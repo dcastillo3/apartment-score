@@ -42,7 +42,7 @@ const configurePassport = () => {
                     }
 
                     // Create new user
-                    const newUserData = buildNewUserFromProfile(profile);
+                    const newUserData = await buildNewUserFromProfile(profile);
                     const newUser = await User.create(newUserData);
 
                     return done(null, newUser);

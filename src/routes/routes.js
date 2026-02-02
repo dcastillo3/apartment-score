@@ -1,26 +1,52 @@
-import React from 'react';
-import { Route, Routes } from 'react-router-dom';
-import { protectedRoutes, menuRoutes, generalRoutes } from './routesConsts';
+import React, { useContext } from 'react';
+import { Route, Routes, Navigate } from 'react-router-dom';
+import { authenticatedRoutes, unauthenticatedRoutes, generalRoutes } from './routesConsts';
+import { AuthContext } from '../context';
 import Page from './page';
 
 function MainRoutes() {
-    const renderMenuRoutes = menuRoutes.map(({ name, path, Element }, idx) => (
-        <Route key={idx} exact path={path} element={<Page title={name}><Element /></Page>} />
-    ));
+    const { isAuthenticated } = useContext(AuthContext);
 
     const renderGeneralRoutes = generalRoutes.map(({ name, path, Element }, idx) => (
-        <Route key={idx} exact path={path} element={<Page title={name}><Element /></Page>} />
+        <Route 
+            key={idx} 
+            exact 
+            path={path} 
+            element={<Page title={name}><Element /></Page>} 
+        />
     ));
 
-    const renderProtectedRoutes = protectedRoutes.map(({ name, path, Element }, idx) => (
-        <Route key={idx} exact path={path} element={<Page title={name}><Element /></Page>} />
+    const renderAuthenticatedRoutes = authenticatedRoutes.map(({ name, path, Element }, idx) => (
+        <Route 
+            key={idx} 
+            exact 
+            path={path} 
+            element={
+                isAuthenticated 
+                    ? <Page title={name}><Element /></Page>
+                    : <Navigate to="/login" replace />
+            } 
+        />
+    ));
+
+    const renderUnauthenticatedRoutes = unauthenticatedRoutes.map(({ name, path, Element }, idx) => (
+        <Route 
+            key={idx} 
+            exact 
+            path={path} 
+            element={
+                isAuthenticated
+                    ? <Navigate to="/" replace />
+                    : <Page title={name}><Element /></Page>
+            } 
+        />
     ));
 
     return (
         <Routes>
-            {renderMenuRoutes}
             {renderGeneralRoutes}
-            {renderProtectedRoutes}
+            {renderAuthenticatedRoutes}
+            {renderUnauthenticatedRoutes}
         </Routes>
     );
 };

@@ -8,3 +8,4 @@ build
 # Internal documentation
 ARCHITECTURE.md
 OAUTH_SETUP.md
+SECURITY_VALIDATION.md

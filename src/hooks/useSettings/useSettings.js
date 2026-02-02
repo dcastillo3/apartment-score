@@ -1,17 +1,17 @@
 import { useState, useContext } from "react";
-import { localStorageKeys, apis } from "utils/consts";
-import { setLocalStorageState } from "utils/helpers";
-import { getInitialScoreSettings, getInitialNoteSettings } from "./useSettingsUtils";
+import { apis } from "utils/consts";
+import { generateDefaultScoreSettings, generateDefaultNoteSettings } from "./useSettingsUtils";
 import { errorPrefixes } from "./useSettingsConsts";
 import { AuthContext } from "context";
 import axios from "axios";
+import _ from "lodash";
 
 function useSettings() {
     const { isAuthenticated } = useContext(AuthContext);
-    const [scoreSettings, setScoreSettings] = useState(getInitialScoreSettings);
-    const [noteSettings, setNoteSettings] = useState(getInitialNoteSettings);
+    const [scoreSettings, setScoreSettings] = useState(generateDefaultScoreSettings);
+    const [noteSettings, setNoteSettings] = useState(generateDefaultNoteSettings);
     
-    // Persist settings to MongoDB (if authenticated) or localStorage (if not)
+    // Persist settings to MongoDB
     const persistSettings = async (settings) => {
         if (isAuthenticated) {
             try {
@@ -22,27 +22,14 @@ function useSettings() {
             } catch (err) {
                 console.error(errorPrefixes.saveFailed, err);
             }
-        } else {
-            // Save each setting type to its own localStorage key
-            if (settings.score) {
-                setLocalStorageState(localStorageKeys.scoreSettings, settings.score);
-            }
-            if (settings.note) {
-                setLocalStorageState(localStorageKeys.noteSettings, settings.note);
-            }
         }
     };
 
-    const handleUpdateScoreSettings = async (newSettings) => {
-        setScoreSettings(newSettings);
-
-        await persistSettings({ score: newSettings, note: noteSettings });
-    };
-
-    const handleUpdateNoteSettings = async (newNoteSettings) => {
+    const handleUpdateSettings = async (newScoreSettings, newNoteSettings) => {
+        setScoreSettings(newScoreSettings);
         setNoteSettings(newNoteSettings);
 
-        await persistSettings({ score: scoreSettings, note: newNoteSettings });
+        await persistSettings({ score: newScoreSettings, note: newNoteSettings });
     };
 
     const fetchSettings = async () => {
@@ -53,11 +40,14 @@ function useSettings() {
             const res = await axios.get(apis.user.data, axiosConfig);
 
             if (res?.data?.success) {
-                const { settings = {} } = res.data.data;
-                if (settings.score) {
+                const { settings } = res.data.data;
+                
+                if (_.isEmpty(settings)) {
+                    // New user - initialize with defaults and persist to MongoDB
+                    await handleUpdateSettings(scoreSettings, noteSettings);
+                } else {
+                    // Existing user - use fetched settings
                     setScoreSettings(settings.score);
-                }
-                if (settings.note) {
                     setNoteSettings(settings.note);
                 }
             }
@@ -69,8 +59,7 @@ function useSettings() {
     return {
         scoreSettings,
         noteSettings,
-        handleUpdateScoreSettings,
-        handleUpdateNoteSettings,
+        handleUpdateSettings,
         fetchSettings
     };
 };

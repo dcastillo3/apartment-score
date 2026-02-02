@@ -132,6 +132,50 @@ const buildInput = (formField, formData, handleChangeField) => {
             );
         };
 
+        case 'email': {
+            const renderTooltip = tooltip && (
+                <Tooltip title={tooltip} placement="right" arrow>
+                    <FormIconContainer $p={[0, 1]}>
+                        <Icon component={InfoOutlinedIcon} />
+                    </FormIconContainer>
+                </Tooltip>
+            );
+            
+            return (
+                <FlexBoxColumn $m={[3]} key={id} $wrap={true}>
+                    <FlexBox>
+                        <Label>{labelName}</Label>
+
+                        {renderTooltip}
+                    </FlexBox>
+
+                    <Input onChange={handleChangeField} value={inputValue} type={inputType} id={id} name={id} {...additionalProps} />
+                </FlexBoxColumn>
+            );
+        };
+
+        case 'password': {
+            const renderTooltip = tooltip && (
+                <Tooltip title={tooltip} placement="right" arrow>
+                    <FormIconContainer $p={[0, 1]}>
+                        <Icon component={InfoOutlinedIcon} />
+                    </FormIconContainer>
+                </Tooltip>
+            );
+            
+            return (
+                <FlexBoxColumn $m={[3]} key={id} $wrap={true}>
+                    <FlexBox>
+                        <Label>{labelName}</Label>
+
+                        {renderTooltip}
+                    </FlexBox>
+
+                    <Input onChange={handleChangeField} value={inputValue} type={inputType} id={id} name={id} {...additionalProps} />
+                </FlexBoxColumn>
+            );
+        };
+
         case 'textarea': {
             const renderTooltip = tooltip && (
                 <Tooltip title={tooltip} placement="right" arrow>
