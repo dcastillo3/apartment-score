@@ -25,9 +25,11 @@ const validateApartment = (apartment) => {
         throw new Error(validationErrors.apartmentMissingFields);
     }
     
-    // Check required fields
+    // Check required fields exist and are not null/undefined
     const requiredFields = ['id', 'address'];
-    const hasAllRequired = _.every(requiredFields, field => !_.isEmpty(apartment[field]));
+    const hasAllRequired = _.every(requiredFields, field => {
+        return !_.isNil(apartment[field]) && apartment[field] !== '';
+    });
     
     if (!hasAllRequired) {
         throw new Error(validationErrors.apartmentMissingFields);
@@ -63,7 +65,7 @@ const validateScoreSettings = (scoreSettings) => {
     }
     
     return _.map(scoreSettings, setting => {
-        if (!_.isPlainObject(setting) || _.isEmpty(setting.id) || !_.isNumber(setting.score)) {
+        if (!_.isPlainObject(setting) || _.isNil(setting.id) || setting.id === '' || !_.isNumber(setting.score)) {
             throw new Error(validationErrors.invalidScoreSettings);
         }
         
@@ -85,7 +87,7 @@ const validateNoteSettings = (noteSettings) => {
     }
     
     return _.map(noteSettings, setting => {
-        if (!_.isPlainObject(setting) || _.isEmpty(setting.id)) {
+        if (!_.isPlainObject(setting) || _.isNil(setting.id) || setting.id === '') {
             throw new Error(validationErrors.invalidNoteSettings);
         }
         
